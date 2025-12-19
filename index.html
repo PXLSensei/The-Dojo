@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PXL Sensei | The Live Dojo</title>
+    <style>
+        :root {
+            --bg: #0b0e14; --panel: #161b22; --txt: #ffffff;
+            --accent: #8b5cf6; --neon: #00f2ff; --live: #ff4655;
+            --border: #30363d; --yt: #ff0000;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--txt); line-height: 1.5; }
+
+        /* --- NAV --- */
+        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent); position: sticky; top: 0; background: rgba(11, 14, 20, 0.9); z-index: 100; backdrop-filter: blur(10px); }
+        .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent); text-decoration: none; }
+        .logo span { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+        nav a { text-decoration: none; color: var(--txt); margin-left: 20px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
+
+        /* --- THEATER MODE --- */
+        .theater { display: grid; grid-template-columns: 3fr 1fr; height: 70vh; background: #000; border-bottom: 2px solid var(--border); }
+        .video-side iframe { width: 100%; height: 100%; border: none; }
+        .chat-side { background: var(--panel); border-left: 2px solid var(--border); display: flex; flex-direction: column; }
+        .chat-header { padding: 12px; background: #1f242c; text-align: center; font-weight: 800; font-size: 0.7rem; color: var(--neon); border-bottom: 1px solid var(--border); }
+
+        /* --- INFO --- */
+        .info-bar { max-width: 1200px; margin: 2rem auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .btn { padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 800; font-size: 0.8rem; transition: 0.3s; color: white; border: none; }
+        .btn-yt { background: var(--yt); }
+        .btn-twitch { background: #9146FF; }
+
+        /* --- VIDEO GALLERY --- */
+        .section { max-width: 1200px; margin: 4rem auto; padding: 0 20px; }
+        .title { font-size: 1.5rem; color: var(--neon); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        
+        .vid-card { background: var(--panel); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; text-decoration: none; color: white; }
+        .vid-card:hover { border-color: var(--neon); transform: translateY(-5px); }
+        .thumb { width: 100%; aspect-ratio: 16/9; background: #222; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--border); }
+        .vid-info { padding: 15px; }
+        .vid-info h4 { font-size: 1rem; margin-bottom: 5px; }
+        .tag { font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase; }
+
+        /* --- CONTACT --- */
+        .contact-card { background: var(--panel); padding: 30px; border-radius: 15px; border: 1px solid var(--accent); }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: #0b0e14; border: 1px solid var(--border); color: white; border-radius: 8px; }
+
+        footer { text-align: center; padding: 40px; opacity: 0.5; font-size: 0.8rem; border-top: 1px solid var(--border); }
+
+        @media (max-width: 900px) { .theater { grid-template-columns: 1fr; height: auto; } .chat-side { height: 350px; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="#" class="logo">PXL <span>SENSEI</span></a>
+    <nav>
+        <a href="#gallery">Gallery</a>
+        <a href="#contact">Contact</a>
+        <a href="https://youtube.com/@PXLSensei" style="color:var(--yt)">YouTube</a>
+    </nav>
+</header>
+
+<section class="theater">
+    <div class="video-side">
+        <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=PXLSensei" allowfullscreen></iframe>
+    </div>
+    <div class="chat-side">
+        <div class="chat-header">LIVE DOJO CHAT</div>
+        <iframe src="https://www.twitch.tv/embed/PXLSensei/chat?parent=pxlsensei.github.io&darkpopout" height="100%" width="100%"></iframe>
+    </div>
+</section>
+
+<div class="info-bar">
+    <div>
+        <h1 style="font-size: 2rem;">The Path of the PXL Sensei</h1>
+        <p style="color: var(--muted);">New videos every week @PXLSensei</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <a href="https://youtube.com/@PXLSensei" class="btn btn-yt">Subscribe</a>
+        <a href="https://twitch.tv/PXLSensei" class="btn btn-twitch">Follow</a>
+    </div>
+</div>
+
+<section class="section" id="gallery">
+    <h2 class="title">Dojo Tutorials</h2>
+    <div class="video-grid">
+        <a href="#" class="vid-card">
+            <div class="thumb">TUTORIAL #1</div>
+            <div class="vid-info"><span class="tag">Settings</span><h4>Pro Aim Guide</h4></div>
+        </a>
+        <a href="#" class="vid-card">
+            <div class="thumb">TUTORIAL #2</div>
+            <div class="vid-info"><span class="tag">Setup</span><h4>Stream Labs 101</h4></div>
+        </a>
+        <a href="#" class="vid-card">
+            <div class="thumb">TUTORIAL #3</div>
+            <div class="vid-info"><span class="tag">Code</span><h4>How to Build This Site</h4></div>
+        </a>
+    </div>
+
+    <h2 class="title">Gaming Highlights</h2>
+    <div class="video-grid">
+        <a href="#" class="vid-card">
+            <div class="thumb">CLIP #1</div>
+            <div class="vid-info"><span class="tag">Epic</span><h4>Clutch 1v5 Win</h4></div>
+        </a>
+        <a href="#" class="vid-card">
+            <div class="thumb">CLIP #2</div>
+            <div class="vid-info"><span class="tag">Funny</span><h4>Failing the Jump</h4></div>
+        </a>
+        <a href="#" class="vid-card">
+            <div class="thumb">CLIP #3</div>
+            <div class="vid-info"><span class="tag">High Score</span><h4>World Record Run</h4></div>
+        </a>
+    </div>
+</section>
+
+<section class="section" id="contact">
+    <div class="contact-card">
+        <h2 style="margin-bottom: 20px; color: var(--neon);">Transmission</h2>
+        <form action="https://formspree.io/f/your-id" method="POST">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <textarea name="message" placeholder="Message to the Sensei..." rows="4" required></textarea>
+            <button type="submit" class="btn btn-twitch" style="width:100%">Submit to Dojo</button>
+        </form>
+    </div>
+</section>
+
+<footer>
+    <p>© 2025 PXL SENSEI • YouTube & Socials @PXLSensei</p>
+</footer>
+
+</body>
+</html>
