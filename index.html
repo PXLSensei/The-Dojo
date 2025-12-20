@@ -8,66 +8,92 @@
         :root {
             --bg: #0b0e14; --panel: #161b22; --txt: #ffffff;
             --accent: #8b5cf6; --neon: #00f2ff; --live: #ff4655;
-            --border: #30363d; --yt: #ff0000; --gold: #ffd700;
+            --border: #30363d; --muted: #848d97; --gold: #ffd700;
+            --twitch-color: #9146ff; --youtube-color: #ff0000; 
+            --kick-color: #53fc18; --tiktok-color: #fe2c55;
+            --silver: #c0c0c0; --bronze: #cd7f32;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--txt); line-height: 1.5; }
+        
+        body { 
+            font-family: 'Inter', system-ui, sans-serif; 
+            background: var(--bg);
+            background-image: linear-gradient(rgba(11, 14, 20, 0.95), rgba(11, 14, 20, 0.95)), 
+                              url('https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=1920');
+            background-size: cover; background-attachment: fixed;
+            color: var(--txt); line-height: 1.5; overflow-x: hidden;
+        }
 
-        /* --- NAV --- */
-        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent); position: sticky; top: 0; background: rgba(11, 14, 20, 0.9); z-index: 100; backdrop-filter: blur(10px); }
+        /* --- 1. PRE-LOADER --- */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0b0e14; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        .loader-logo { font-size: 2.5rem; font-weight: 900; color: var(--accent); }
+        .loader-logo span { color: var(--neon); text-shadow: 0 0 15px var(--neon); }
+        .load-bar { width: 200px; height: 4px; background: #222; border-radius: 10px; overflow: hidden; margin-top: 10px;}
+        .load-progress { width: 0%; height: 100%; background: var(--neon); box-shadow: 0 0 15px var(--neon); animation: load-anim 2s forwards; }
+        @keyframes load-anim { to { width: 100%; } }
+
+        /* --- 2. HEADER --- */
+        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent); position: sticky; top: 0; background: rgba(11, 14, 20, 0.95); z-index: 100; backdrop-filter: blur(10px); }
         .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent); text-decoration: none; }
         .logo span { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
-        nav a { text-decoration: none; color: var(--txt); margin-left: 20px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
+        .live-btn { background: var(--live); color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: 900; cursor: pointer; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
-        /* --- THEATER MODE --- */
-        .theater { display: grid; grid-template-columns: 3fr 1fr; height: 75vh; background: #000; border-bottom: 2px solid var(--border); }
+        /* --- 3. THEATER DASHBOARD --- */
+        .theater { display: grid; grid-template-columns: 3fr 1fr; height: 70vh; background: #000; border-bottom: 2px solid var(--border); }
         .video-side iframe { width: 100%; height: 100%; border: none; }
         .chat-side { background: var(--panel); border-left: 2px solid var(--border); display: flex; flex-direction: column; }
         .chat-header { padding: 12px; background: #1f242c; text-align: center; font-weight: 800; font-size: 0.7rem; color: var(--neon); border-bottom: 1px solid var(--border); }
 
-        /* --- GOAL BAR --- */
-        .goal-container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
-        .goal-header { display: flex; justify-content: space-between; font-weight: 800; font-size: 0.9rem; margin-bottom: 8px; color: var(--gold); }
-        .progress-bg { width: 100%; background: #333; height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
-        .progress-fill { width: 65%; /* ADJUST THIS % MANUALLY */ background: linear-gradient(90deg, var(--accent), var(--neon)); height: 100%; box-shadow: 0 0 10px var(--neon); }
+        /* --- 4. STREAM SELECTOR MODAL --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
+        .modal-box { background: var(--panel); border: 2px solid var(--accent); border-radius: 15px; padding: 30px; width: 90%; max-width: 450px; text-align: center; }
+        .platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .platform-btn { padding: 15px; border-radius: 8px; text-decoration: none; color: white; font-weight: 900; font-size: 0.85rem; transition: 0.3s; }
+        .btn-twitch { background: var(--twitch-color); }
+        .btn-kick { background: var(--kick-color); color: black !important; }
+        .btn-youtube { background: var(--youtube-color); }
+        .btn-tiktok { background: var(--tiktok-color); border: 1px solid #fe2c55; }
 
-        /* --- SECTIONS --- */
-        .section { max-width: 1200px; margin: 4rem auto; padding: 0 20px; }
-        .title { font-size: 1.5rem; color: var(--neon); margin-bottom: 20px; text-transform: uppercase; border-left: 5px solid var(--accent); padding-left: 15px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: 0.3s; }
-        .card:hover { border-color: var(--neon); transform: translateY(-5px); }
+        /* --- 5. MAIN CONTENT --- */
+        .main-content { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 2.2fr 1fr; gap: 40px; }
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 25px; margin-bottom: 25px; }
+        .title { font-size: 1.4rem; color: var(--neon); text-transform: uppercase; margin-bottom: 20px; border-left: 4px solid var(--accent); padding-left: 15px; }
 
-        /* --- SCHEDULE LIST --- */
-        .schedule-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
-        .day { font-weight: 800; color: var(--accent); }
-        .time { color: var(--muted); }
+        /* --- 6. GOAL BAR --- */
+        .goal-section { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
+        .progress-bg { width: 100%; background: #222; height: 14px; border-radius: 7px; overflow: hidden; border: 1px solid var(--border); }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--neon)); width: 65%; box-shadow: 0 0 10px var(--neon); }
 
-        /* --- BUTTONS --- */
-        .btn { padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: 800; font-size: 0.8rem; transition: 0.3s; display: inline-block; cursor: pointer; border: none; }
-        .btn-yt { background: var(--yt); color: white; }
-        .btn-discord { background: #5865F2; color: white; width: 100%; text-align: center; margin-top: 10px; }
+        /* --- 7. WALL OF FAME --- */
+        .fame-item { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 10px; }
+        .rank-circle { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; flex-shrink: 0; }
+        .rank-1 { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+        .rank-2 { background: var(--silver); }
+        .rank-3 { background: var(--bronze); }
 
-        /* --- FOOTER/CONTACT --- */
-        .contact-box { background: var(--panel); padding: 30px; border-radius: 15px; border: 1px solid var(--accent); }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: #0b0e14; border: 1px solid var(--border); color: white; border-radius: 8px; }
+        #scrollTop { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 500; border: 2px solid var(--neon); }
+        #scrollTop.show { opacity: 1; visibility: visible; }
 
-        footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); color: var(--muted); }
-
-        @media (max-width: 900px) { .theater { grid-template-columns: 1fr; height: auto; } .chat-side { height: 400px; } }
+        @media (max-width: 950px) { .main-content { grid-template-columns: 1fr; } .theater { grid-template-columns: 1fr; height: auto; } .chat-side { height: 400px; } }
     </style>
 </head>
 <body>
 
+<div id="loader">
+    <div class="loader-logo">PXL <span>SENSEI</span></div>
+    <div class="load-bar"><div class="load-progress"></div></div>
+</div>
+
 <header>
     <a href="#" class="logo">PXL <span>SENSEI</span></a>
-    <nav>
-        <a href="#gallery">Videos</a>
-        <a href="#schedule">Schedule</a>
-        <a href="#contact">Contact</a>
-    </nav>
+    <button class="live-btn" onclick="openStreams()">WATCH LIVE NOW</button>
 </header>
 
 <section class="theater">
@@ -75,68 +101,89 @@
         <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=PXLSensei" allowfullscreen></iframe>
     </div>
     <div class="chat-side">
-        <div class="chat-header">LIVE DOJO CHAT</div>
-        <iframe src="https://www.twitch.tv/embed/PXLSensei/chat?parent=YOUR_URL&darkpopout" height="100%" width="100%"></iframe>
+        <div class="chat-header">DOJO COMMAND CHAT</div>
+        <iframe src="https://www.twitch.tv/embed/PXLSensei/chat?parent=pxlsensei.github.io&darkpopout" height="100%" width="100%"></iframe>
     </div>
 </section>
 
-<div class="goal-container">
-    <div class="goal-header">
-        <span>GEAR UPGRADE GOAL: New Streaming Camera</span>
-        <span>$325 / $500</span>
-    </div>
-    <div class="progress-bg">
-        <div class="progress-fill"></div>
+<div id="streamModal" class="modal" onclick="closeStreams()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <h2 style="color: var(--neon); margin-bottom: 10px; font-weight: 900;">TRANSMISSION HUB</h2>
+        <div class="platform-grid">
+            <a href="https://www.twitch.tv/pxlsensei" target="_blank" class="platform-btn btn-twitch">TWITCH</a>
+            <a href="https://www.youtube.com/@PXLSensei" target="_blank" class="platform-btn btn-youtube">YOUTUBE</a>
+            <a href="https://kick.com/pxlsensei" target="_blank" class="platform-btn btn-kick">KICK</a>
+            <a href="https://www.tiktok.com/@PXLSENSEI" target="_blank" class="platform-btn btn-tiktok">TIKTOK</a>
+        </div>
+        <p onclick="closeStreams()" style="margin-top: 25px; cursor: pointer; color: var(--live); font-weight: bold; font-size: 0.7rem;">CLOSE MENU</p>
     </div>
 </div>
 
-<div class="section" style="display: grid; grid-template-columns: 2fr 1fr; gap: 40px;">
-    <div id="gallery">
-        <h2 class="title">Latest Dojo Content</h2>
-        <div class="grid">
-            <div class="card">
-                <div style="height:150px; background:#222; border-radius:8px; margin-bottom:15px; display:flex; align-items:center; justify-content:center;">THUMBNAIL 1</div>
-                <h4>Tutorial: Pro Pixel Art</h4>
-            </div>
-            <div class="card">
-                <div style="height:150px; background:#222; border-radius:8px; margin-bottom:15px; display:flex; align-items:center; justify-content:center;">THUMBNAIL 2</div>
-                <h4>Highlight: 50 Kill Streak</h4>
-            </div>
+<div class="goal-section">
+    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 800; color: var(--gold); margin-bottom: 8px;">
+        <span>DOJO UPGRADE FUND: NEW CAMERA</span><span>$325 / $500</span>
+    </div>
+    <div class="progress-bg"><div class="progress-fill"></div></div>
+</div>
+
+<main class="main-content">
+    <div>
+        <h2 class="title">Latest Training</h2>
+        <div class="card">
+            <small style="color: var(--accent); font-weight: 800;">TECH UPDATE • 2025</small>
+            <h3 style="margin-top: 10px;">Dojo Calibrated: Multi-Platform Sync</h3>
+            <p style="color: var(--muted); margin-top: 10px;">Welcome to the new hub. We've integrated the Transmission Hub and the Wall of Fame to reward the most dedicated students in the Dojo. Check the sidebar for live updates.</p>
+        </div>
+        <div class="card">
+            <small style="color: var(--neon); font-weight: 800;">GAMING • HIGHLIGHT</small>
+            <h3 style="margin-top: 10px;">Mastering the Pixel: My 2025 Setup</h3>
+            <p style="color: var(--muted); margin-top: 10px;">Consistency is the key to mastery. I've broken down every piece of gear used in the Dojo for the upcoming season...</p>
         </div>
     </div>
 
     <aside>
-        <div class="card" id="schedule" style="margin-bottom: 20px;">
-            <h3 style="color:var(--neon); margin-bottom:15px;">STREAM SCHEDULE</h3>
-            <div class="schedule-row"><span class="day">MON</span> <span class="time">8PM EST</span></div>
-            <div class="schedule-row"><span class="day">WED</span> <span class="time">8PM EST</span></div>
-            <div class="schedule-row"><span class="day">FRI</span> <span class="time">10PM EST</span></div>
-            <div class="schedule-row"><span class="day">SAT</span> <span class="time">RANDOM</span></div>
+        <div class="card">
+            <h3 style="color:var(--gold); margin-bottom:15px; font-size: 0.9rem;">WALL OF FAME</h3>
+            <div class="fame-item"><div class="rank-circle rank-1">1</div><span style="font-weight:700;">CyberNinja_99</span></div>
+            <div class="fame-item"><div class="rank-circle rank-2">2</div><span style="font-weight:700;">RetroGamer_X</span></div>
+            <div class="fame-item"><div class="rank-circle rank-3">3</div><span style="font-weight:700;">PixelQueen</span></div>
         </div>
 
-        <div class="card" style="border-color: #5865F2;">
-            <h3 style="color:#5865F2;">JOIN THE COMMUNITY</h3>
-            <p style="font-size:0.8rem; margin: 10px 0;">Chat with the Sensei and other students 24/7.</p>
-            <a href="https://discord.gg/@PXLSensei" class="btn btn-discord">DISCORD SERVER</a>
+        <div class="card" style="padding: 10px; height: 450px;">
+            <h3 style="color:var(--neon); margin: 10px 0 15px 15px; font-size: 0.9rem;">TWITTER FEED</h3>
+            <div style="height: 380px; overflow-y: scroll; border-radius: 8px;">
+                <a class="twitter-timeline" data-height="380" data-theme="dark" data-chrome="transparent nofooter noheader noborders" href="https://twitter.com/PXLSENSEI?ref_src=twsrc%5Etfw">Loading Feed...</a> 
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
         </div>
     </aside>
-</div>
+</main>
 
-<section class="section" id="contact">
-    <div class="contact-box">
-        <h2 style="margin-bottom: 20px; color: var(--neon);">Business Inquiries</h2>
-        <form action="https://formspree.io/f/your-id" method="POST">
-            <input type="text" name="name" placeholder="Name/Brand" required>
-            <input type="email" name="email" placeholder="Email Address" required>
-            <textarea name="message" placeholder="Project details..." rows="4" required></textarea>
-            <button type="submit" class="btn btn-yt" style="width:100%; font-size:1rem;">Send Transmission</button>
-        </form>
-    </div>
-</section>
+<div id="scrollTop" onclick="window.scrollTo(0,0)">↑</div>
 
 <footer>
-    <p>© 2025 PXL SENSEI • Follow @PXLSensei everywhere</p>
+    <p>© 2025 PXL SENSEI • Master the Pixel</p>
 </footer>
+
+<script>
+    function hideLoader() {
+        const loader = document.getElementById('loader');
+        if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.visibility = 'hidden'; }, 500);
+        }
+    }
+    window.addEventListener('load', () => { setTimeout(hideLoader, 2000); });
+
+    function openStreams() { document.getElementById('streamModal').style.display = 'flex'; }
+    function closeStreams() { document.getElementById('streamModal').style.display = 'none'; }
+
+    window.onscroll = function() {
+        const btn = document.getElementById('scrollTop');
+        if (document.documentElement.scrollTop > 300) { btn.classList.add('show'); }
+        else { btn.classList.remove('show'); }
+    };
+</script>
 
 </body>
 </html>
