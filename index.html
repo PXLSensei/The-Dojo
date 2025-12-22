@@ -7,192 +7,98 @@
     <style>
         :root {
             --bg: #0b0e14; --panel: #161b22; --txt: #ffffff;
-            --accent: #8b5cf6; --neon: #00f2ff; --live: #ff4655;
-            --border: #30363d; --muted: #848d97; --gold: #ffd700;
-            --twitch-color: #9146ff; --youtube-color: #ff0000; 
-            --kick-color: #53fc18; --tiktok-color: #fe2c55;
-            --silver: #c0c0c0; --bronze: #cd7f32;
+            --accent: #8b5cf6; --neon: #00f2ff;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
             font-family: 'Inter', sans-serif; 
             background: var(--bg);
-            background-image: linear-gradient(rgba(11, 14, 20, 0.95), rgba(11, 14, 20, 0.95)), 
-                              url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920');
-            background-size: cover; background-attachment: fixed;
-            color: var(--txt); line-height: 1.5; overflow-x: hidden;
-            padding-top: 30px;
+            color: var(--txt);
+            overflow-x: hidden;
+            padding-top: 30px; 
         }
 
-        /* --- 1. INTRO LOADER --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity 1s ease; }
-        #loader video { position: absolute; min-width: 100%; min-height: 100%; object-fit: cover; z-index: 1; }
-        #skip-btn { position: absolute; bottom: 40px; right: 40px; z-index: 10002; padding: 15px 45px; border: 2px solid var(--neon); color: var(--neon); background: rgba(0,0,0,0.85); cursor: pointer; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; }
-
-        /* --- 2. FIXED TICKER (GENERALIZED) --- */
-        .ticker-wrap { 
-            width: 100%; overflow: hidden; background: var(--accent); color: white; 
-            height: 30px; display: flex; align-items: center; font-size: 0.75rem; 
-            font-weight: 900; text-transform: uppercase; border-bottom: 1px solid var(--neon); 
-            z-index: 1000; position: fixed; top: 0; left: 0; 
+        /* --- LOADER FIX --- */
+        #loader { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; display: flex; align-items: center; justify-content: center; 
+            z-index: 10000; transition: opacity 0.8s ease; 
         }
-        .ticker-move { display: flex; white-space: nowrap; animation: ticker 30s linear infinite; }
-        .ticker-item { padding: 0 50px; }
-        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        #loader video { position: absolute; min-width: 100%; min-height: 100%; object-fit: cover; }
 
-        /* --- 3. HEADER: SYMMETRIC --- */
+        /* Fallback message if video fails */
+        #loader-status { position: absolute; color: var(--muted); bottom: 100px; font-size: 0.8rem; z-index: 10001; }
+
+        #skip-btn { 
+            position: absolute; bottom: 40px; right: 40px; z-index: 10002; 
+            padding: 15px 45px; border: 2px solid var(--neon); color: var(--neon); 
+            background: rgba(0,0,0,0.85); cursor: pointer; font-weight: 900; 
+            text-transform: uppercase; letter-spacing: 3px; 
+        }
+
+        /* --- REST OF UI --- */
+        .ticker-wrap { width: 100%; background: var(--accent); height: 30px; position: fixed; top: 0; z-index: 1000; }
         header { 
-            padding: 2rem 5%; 
-            display: grid; 
-            grid-template-columns: 1fr 2.5fr 1fr; 
-            align-items: center; 
-            border-bottom: 3px solid var(--accent); 
-            background: rgba(11, 14, 20, 0.97); 
-            position: sticky; top: 30px; z-index: 100; backdrop-filter: blur(15px); 
+            padding: 2rem 5%; display: grid; grid-template-columns: 1fr 2.5fr 1fr; 
+            align-items: center; border-bottom: 3px solid var(--accent); background: rgba(11, 14, 20, 0.97); 
+            position: sticky; top: 30px; z-index: 100; 
         }
-
-        .logo-side { display: flex; justify-content: center; align-items: center; perspective: 1000px; }
-        .logo-watermark { 
-            width: 130px; height: 130px; opacity: 0.7; 
-            animation: spinHorizontal 10s linear infinite, glowPulse 4s ease-in-out infinite; 
-            transform-style: preserve-3d;
-        }
-
-        @keyframes spinHorizontal { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
-        @keyframes glowPulse { 0%, 100% { filter: drop-shadow(0 0 10px var(--accent)); } 50% { filter: drop-shadow(0 0 25px var(--neon)); } }
-
-        .title-container { text-align: center; }
-        .logo-text { 
-            font-size: 3.5rem; font-weight: 900; color: var(--accent); 
-            text-decoration: none; letter-spacing: 8px; text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(0,0,0,0.9);
-        }
+        .logo-side img { width: 120px; height: 120px; animation: spin 10s linear infinite; }
+        @keyframes spin { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+        
+        .logo-text { font-size: 3rem; font-weight: 900; color: var(--accent); text-transform: uppercase; text-align: center; display: block; }
         .logo-text span { color: var(--neon); }
-
-        /* --- 4. SOURCE BAR --- */
-        .source-bar { background: #000; padding: 12px 5%; display: flex; gap: 20px; border-bottom: 1px solid var(--border); overflow-x: auto; justify-content: center; }
-        .src-btn { padding: 10px 25px; border-radius: 4px; border: none; font-weight: 900; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; transition: 0.3s; opacity: 0.6; }
-        .src-btn.active { opacity: 1; transform: scale(1.1); box-shadow: 0 0 15px var(--accent); }
-        .btn-tw { background: var(--twitch-color); color: white; }
-        .btn-yt { background: var(--youtube-color); color: white; }
-        .btn-kk { background: var(--kick-color); color: black; }
-        .btn-tt { background: white; color: black; border: 1px solid var(--tiktok-color); }
-
-        /* --- 5. THEATER --- */
-        .theater { display: grid; grid-template-columns: 4fr 1.2fr; height: 75vh; background: #000; border-bottom: 2px solid var(--accent); }
-        .video-side iframe { width: 100%; height: 100%; border: none; }
-        .chat-side { background: var(--panel); border-left: 2px solid var(--border); overflow: hidden; }
-
-        /* --- 6. MAIN CONTENT --- */
-        .main-content { max-width: 1400px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 2.2fr 1fr; gap: 40px; }
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 25px; margin-bottom: 25px; }
-        .title-sec { font-size: 1.3rem; color: var(--neon); text-transform: uppercase; margin-bottom: 20px; border-left: 4px solid var(--accent); padding-left: 15px; }
-
-        .item-row { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 10px; }
-        .badge { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; flex-shrink: 0; }
-        .badge-1 { background: var(--gold); } 
-        .badge-2 { background: var(--silver); } 
-        .badge-3 { background: var(--bronze); }
-
-        @media (max-width: 1100px) { 
-            header { grid-template-columns: 1fr; } .logo-side { display: none; }
-            .main-content, .theater { grid-template-columns: 1fr; } .chat-side { display: none; }
-        }
     </style>
 </head>
 <body>
 
 <div id="loader">
-    <video id="intro-vid" muted autoplay playsinline>
-        <source src="file:"https://github.com/PXLSensei/The-Dojo/blob/main/intro.mp4" type="video/mp4">
-    </video>
-    <button id="skip-btn" onclick="enterDojo()">Skip</button>
+    <video id="intro-vid" muted autoplay playsinline onerror="handleVideoError()">
+        <source src="file:///G:/intro.mp4" type="video/mp4">
+        <source src="intro.mp4" type="video/mp4"> </video>
+    <div id="loader-status">Initializing System...</div>
+    <button id="skip-btn" onclick="enterHub()">Enter Hub</button>
 </div>
 
-<div class="ticker-wrap">
-    <div class="ticker-move">
-        <div class="ticker-item">SYSTEM STATUS: OPERATIONAL</div>
-        <div class="ticker-item">BROADCASTING LIVE ON MULTIPLE PLATFORMS</div>
-        <div class="ticker-item">CHECK THE LATEST UPDATES BELOW</div>
-    </div>
-</div>
+<div class="ticker-wrap"></div>
 
 <header>
-    <div class="logo-side"><img src="file:///G:/Stream Assests/Logos/A bold, modern gaming logo featuring a man's face with a long, gray-tinged beard (3).png" class="logo-watermark"></div>
+    <div class="logo-side"><img src="file:///G:/Stream Assests/Logos/A bold, modern gaming logo featuring a man's face with a long, gray-tinged beard (3).png"></div>
     <div class="title-container">
         <a href="#" class="logo-text">PXL <span>SENSEI</span></a>
-        <div style="color:var(--neon); font-weight:900; letter-spacing:4px; font-size:0.8rem;">OFFICIAL HUB</div>
     </div>
-    <div class="logo-side"><img src="file:///G:/Stream Assests/Logos/A bold, modern gaming logo featuring a man's face with a long, gray-tinged beard (3).png" class="logo-watermark"></div>
+    <div class="logo-side"><img src="file:///G:/Stream Assests/Logos/A bold, modern gaming logo featuring a man's face with a long, gray-tinged beard (3).png"></div>
 </header>
 
-<div class="source-bar">
-    <button class="src-btn btn-tw active" onclick="switchSource('twitch', this)">Twitch</button>
-    <button class="src-btn btn-yt" onclick="switchSource('youtube', this)">YouTube</button>
-    <button class="src-btn btn-kk" onclick="switchSource('kick', this)">Kick</button>
-    <button class="src-btn btn-tt" onclick="switchSource('tiktok', this)">TikTok</button>
-</div>
-
-<section class="theater">
-    <div class="video-side"><iframe id="main-player" src="https://player.twitch.tv/?channel=pxlsensei&parent=localhost" allowfullscreen></iframe></div>
-    <div class="chat-side"><iframe id="main-chat" src="https://www.twitch.tv/embed/pxlsensei/chat?parent=localhost&darkpopout" width="100%" height="100%"></iframe></div>
-</section>
-
-<main class="main-content">
-    <div>
-        <h2 class="title-sec">Community Leaderboard</h2>
-        <div class="card">
-            <div class="item-row"><div class="badge badge-1">1</div><span style="font-weight:700; color:var(--gold);">Top_Contributor</span></div>
-            <div class="item-row"><div class="badge badge-2">2</div><span style="font-weight:700; color:var(--silver);">Member_Prime</span></div>
-            <div class="item-row"><div class="badge badge-3">3</div><span style="font-weight:700; color:var(--bronze);">Active_User</span></div>
-        </div>
-    </div>
-
-    <aside>
-        <div class="card">
-            <h2 class="title-sec" style="border:none; padding:0; font-size:1rem;">Support</h2>
-            <div style="display: grid; gap: 10px;">
-                <a href="https://www.youtube.com/@PXLSensei/join" target="_blank" class="src-btn btn-yt" style="text-align:center; opacity:1; text-decoration:none;">YOUTUBE JOIN</a>
-                <a href="https://www.twitch.tv/subs/pxlsensei" target="_blank" class="src-btn btn-tw" style="text-align:center; opacity:1; text-decoration:none;">TWITCH SUB</a>
-            </div>
-        </div>
-    </aside>
-</main>
-
 <script>
+    const loader = document.getElementById('loader');
     const video = document.getElementById('intro-vid');
-    const player = document.getElementById('main-player');
-    const chat = document.getElementById('main-chat');
 
+    // If video finishes, enter automatically
     video.onended = () => enterHub();
+
+    // If video fails to load, tell the user or auto-skip
+    function handleVideoError() {
+        console.log("Video failed to load. Check file path.");
+        document.getElementById('loader-status').innerText = "Video Link Offline - Click Enter to Proceed";
+    }
+
     function enterHub() {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 1000);
+        loader.style.opacity = '0';
+        setTimeout(() => { 
+            loader.style.display = 'none'; 
+            // Ensures body can scroll after loader is gone
+            document.body.style.overflow = 'auto';
+        }, 800);
     }
 
-    function switchSource(platform, btn) {
-        document.querySelectorAll('.src-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const host = window.location.hostname || "localhost";
-
-        if (platform === 'twitch') {
-            player.src = `https://player.twitch.tv/?channel=pxlsensei&parent=${host}`;
-            chat.src = `https://www.twitch.tv/embed/pxlsensei/chat?parent=${host}&darkpopout`;
-        } else if (platform === 'youtube') {
-            player.src = "https://www.youtube.com/embed/live_stream?channel=UCxiaxssXjLp0Dz8g34DycnA";
-            let vID = prompt("Enter Stream ID for Chat:");
-            chat.src = vID ? `https://www.youtube.com/live_chat?v=${vID}&embed_domain=${host}` : "";
-        } else if (platform === 'kick') {
-            player.src = "https://player.kick.com/pxlsensei";
-            chat.src = "https://kick.com/pxlsensei/chat";
-        }
-    }
+    // Safety: If the user is stuck for more than 5 seconds without video, show the skip button clearly
+    setTimeout(() => {
+        document.getElementById('skip-btn').style.display = 'block';
+    }, 5000);
 </script>
+
 </body>
 </html>
-
-
-
-
