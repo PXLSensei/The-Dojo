@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PXL Sensei | The Official Dojo</title>
+    <title>PXL SENSEI | Official Hub</title>
     <style>
         :root {
             --bg: #0b0e14; --panel: #161b22; --txt: #ffffff;
@@ -20,7 +20,7 @@
             font-family: 'Inter', sans-serif; 
             background: var(--bg);
             background-image: linear-gradient(rgba(11, 14, 20, 0.95), rgba(11, 14, 20, 0.95)), 
-                              url('https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=1920');
+                              url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920');
             background-size: cover; background-attachment: fixed;
             color: var(--txt); line-height: 1.5; overflow-x: hidden;
             padding-top: 30px; /* Space for fixed ticker */
@@ -31,7 +31,7 @@
         #loader video { position: absolute; min-width: 100%; min-height: 100%; object-fit: cover; z-index: 1; }
         #skip-btn { position: absolute; bottom: 40px; right: 40px; z-index: 10002; padding: 15px 45px; border: 2px solid var(--neon); color: var(--neon); background: rgba(0,0,0,0.85); cursor: pointer; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; }
 
-        /* --- 2. FIXED TICKER (ALWAYS AT TOP) --- */
+        /* --- 2. FIXED TICKER (GENERALIZED) --- */
         .ticker-wrap { 
             width: 100%; overflow: hidden; background: var(--accent); color: white; 
             height: 30px; display: flex; align-items: center; font-size: 0.75rem; 
@@ -42,7 +42,7 @@
         .ticker-item { padding: 0 50px; }
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* --- 3. HEADER: SYMMETRIC WITH DUAL LOGOS --- */
+        /* --- 3. HEADER: SYMMETRIC --- */
         header { 
             padding: 2rem 5%; 
             display: grid; 
@@ -71,7 +71,7 @@
         }
         .logo-text span { color: var(--neon); }
 
-        /* --- 4. SOURCE CONTROLS --- */
+        /* --- 4. SOURCE BAR --- */
         .source-bar { background: #000; padding: 12px 5%; display: flex; gap: 20px; border-bottom: 1px solid var(--border); overflow-x: auto; justify-content: center; }
         .src-btn { padding: 10px 25px; border-radius: 4px; border: none; font-weight: 900; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; transition: 0.3s; opacity: 0.6; }
         .src-btn.active { opacity: 1; transform: scale(1.1); box-shadow: 0 0 15px var(--accent); }
@@ -80,21 +80,21 @@
         .btn-kk { background: var(--kick-color); color: black; }
         .btn-tt { background: white; color: black; border: 1px solid var(--tiktok-color); }
 
-        /* --- 5. THEATER ENGINE --- */
+        /* --- 5. THEATER --- */
         .theater { display: grid; grid-template-columns: 4fr 1.2fr; height: 75vh; background: #000; border-bottom: 2px solid var(--accent); }
         .video-side iframe { width: 100%; height: 100%; border: none; }
         .chat-side { background: var(--panel); border-left: 2px solid var(--border); overflow: hidden; }
 
-        /* --- 6. WALL OF FAME & CONTENT --- */
+        /* --- 6. MAIN CONTENT --- */
         .main-content { max-width: 1400px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 2.2fr 1fr; gap: 40px; }
         .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 25px; margin-bottom: 25px; }
         .title-sec { font-size: 1.3rem; color: var(--neon); text-transform: uppercase; margin-bottom: 20px; border-left: 4px solid var(--accent); padding-left: 15px; }
 
-        .fame-item { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 10px; }
-        .rank-circle { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; flex-shrink: 0; }
-        .rank-1 { background: var(--gold); border: 2px solid #fff; } 
-        .rank-2 { background: var(--silver); border: 2px solid #fff; } 
-        .rank-3 { background: var(--bronze); border: 2px solid #fff; }
+        .item-row { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 10px; }
+        .badge { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; flex-shrink: 0; }
+        .badge-1 { background: var(--gold); } 
+        .badge-2 { background: var(--silver); } 
+        .badge-3 { background: var(--bronze); }
 
         @media (max-width: 1100px) { 
             header { grid-template-columns: 1fr; } .logo-side { display: none; }
@@ -108,14 +108,14 @@
     <video id="intro-vid" muted autoplay playsinline>
         <source src="file:///G:/intro.mp4" type="video/mp4">
     </video>
-    <button id="skip-btn" onclick="enterDojo()">Skip Intro</button>
+    <button id="skip-btn" onclick="enterDojo()">Skip</button>
 </div>
 
 <div class="ticker-wrap">
     <div class="ticker-move">
-        <div class="ticker-item">SENSEI STATUS: ONLINE</div>
-        <div class="ticker-item">YOUTUBE CHANNEL SYNCED: UCxiaxssXjLp0Dz8g34DycnA</div>
-        <div class="ticker-item">JOIN THE WALL OF FAME BY SUPPORTING THE CHANNEL</div>
+        <div class="ticker-item">SYSTEM STATUS: OPERATIONAL</div>
+        <div class="ticker-item">BROADCASTING LIVE ON MULTIPLE PLATFORMS</div>
+        <div class="ticker-item">CHECK THE LATEST UPDATES BELOW</div>
     </div>
 </div>
 
@@ -142,19 +142,20 @@
 
 <main class="main-content">
     <div>
-        <h2 class="title-sec">Wall of Fame</h2>
+        <h2 class="title-sec">Community Leaderboard</h2>
         <div class="card">
-            <div class="fame-item"><div class="rank-circle rank-1">1</div><span style="font-weight:700; color:var(--gold);">Alpha_Ninja</span></div>
-            <div class="fame-item"><div class="rank-circle rank-2">2</div><span style="font-weight:700; color:var(--silver);">Beta_Warrior</span></div>
-            <div class="fame-item"><div class="rank-circle rank-3">3</div><span style="font-weight:700; color:var(--bronze);">Gamma_Student</span></div>
+            <div class="item-row"><div class="badge badge-1">1</div><span style="font-weight:700; color:var(--gold);">Top_Contributor</span></div>
+            <div class="item-row"><div class="badge badge-2">2</div><span style="font-weight:700; color:var(--silver);">Member_Prime</span></div>
+            <div class="item-row"><div class="badge badge-3">3</div><span style="font-weight:700; color:var(--bronze);">Active_User</span></div>
         </div>
     </div>
+
     <aside>
-        <div class="card" style="padding: 10px; height: 350px;">
-            <h3 style="color:var(--neon); margin-bottom: 10px; font-size: 0.8rem;">SUPPORT</h3>
-            <div style="display: grid; gap: 5px;">
-                <a href="https://www.youtube.com/@PXLSensei/join" target="_blank" class="src-btn btn-yt" style="text-align:center; opacity:1; text-decoration:none;">JOIN YOUTUBE</a>
-                <a href="https://www.twitch.tv/subs/pxlsensei" target="_blank" class="src-btn btn-tw" style="text-align:center; opacity:1; text-decoration:none;">SUB TWITCH</a>
+        <div class="card">
+            <h2 class="title-sec" style="border:none; padding:0; font-size:1rem;">Support</h2>
+            <div style="display: grid; gap: 10px;">
+                <a href="https://www.youtube.com/@PXLSensei/join" target="_blank" class="src-btn btn-yt" style="text-align:center; opacity:1; text-decoration:none;">YOUTUBE JOIN</a>
+                <a href="https://www.twitch.tv/subs/pxlsensei" target="_blank" class="src-btn btn-tw" style="text-align:center; opacity:1; text-decoration:none;">TWITCH SUB</a>
             </div>
         </div>
     </aside>
@@ -165,8 +166,8 @@
     const player = document.getElementById('main-player');
     const chat = document.getElementById('main-chat');
 
-    video.onended = () => enterDojo();
-    function enterDojo() {
+    video.onended = () => enterHub();
+    function enterHub() {
         document.getElementById('loader').style.opacity = '0';
         setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 1000);
     }
@@ -181,7 +182,7 @@
             chat.src = `https://www.twitch.tv/embed/pxlsensei/chat?parent=${host}&darkpopout`;
         } else if (platform === 'youtube') {
             player.src = "https://www.youtube.com/embed/live_stream?channel=UCxiaxssXjLp0Dz8g34DycnA";
-            let vID = prompt("Enter YouTube Stream ID for Chat:");
+            let vID = prompt("Enter Stream ID for Chat:");
             chat.src = vID ? `https://www.youtube.com/live_chat?v=${vID}&embed_domain=${host}` : "";
         } else if (platform === 'kick') {
             player.src = "https://player.kick.com/pxlsensei";
