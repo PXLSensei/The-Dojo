@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PXL SENSEI | Command Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -13,11 +13,10 @@
             --live: #ff4655;
         }
 
-        /* --- APPLYING CLEAN FONT --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { 
             width: 100%; overflow-x: hidden; background: var(--bg); color: var(--txt); 
-            font-family: 'Rajdhani', sans-serif; /* Clean, High-Tech Font */
+            font-family: 'Rajdhani', sans-serif; 
         }
         body { padding-top: 30px; }
 
@@ -52,46 +51,45 @@
             background: rgba(5, 7, 10, 0.95); position: sticky; top: 30px; z-index: 900; 
             backdrop-filter: blur(15px);
         }
-        .logo-side img { width: 65px; height: 65px; animation: spin 12s linear infinite; margin: 0 auto; display: block; filter: drop-shadow(0 0 5px var(--accent)); }
+        .logo-side img { width: 150px; height: 150px; animation: spin 12s linear infinite; margin: 0 auto; display: block; filter: drop-shadow(0 0 5px var(--accent)); }
         @keyframes spin { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
         
         .title-container { text-align: center; }
-        .logo-text { 
-            font-size: clamp(1.5rem, 5vw, 3rem); font-weight: 700; color: #fff; 
-            text-transform: uppercase; text-decoration: none; letter-spacing: 12px; 
-        }
+        .logo-text { font-size: clamp(1.5rem, 5vw, 3rem); font-weight: 700; color: #fff; text-transform: uppercase; text-decoration: none; letter-spacing: 12px; }
         .logo-text span { color: var(--accent); }
 
-        /* --- 4. LIVE STATUS --- */
         .live-status-container { position: absolute; right: 5%; }
         .live-indicator { 
             background: rgba(255, 70, 85, 0.1); border: 1px solid var(--live); 
             color: var(--live); padding: 5px 15px; font-size: 0.8rem; font-weight: 700; 
             border-radius: 2px; display: flex; align-items: center; gap: 8px; 
-            animation: pulse 2s infinite; text-transform: uppercase; letter-spacing: 1px;
+            animation: pulse 2s infinite; text-transform: uppercase;
         }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 70, 85, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(255, 70, 85, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 70, 85, 0); } }
         .dot { width: 6px; height: 6px; background: var(--live); border-radius: 50%; }
 
-        /* --- 5. DUAL THEATER --- */
-        .theater-split { display: grid; grid-template-columns: 1fr 1fr; height: 62vh; background: #000; gap: 4px; padding: 8px; }
-        .stream-box { position: relative; border: 1px solid var(--border); background: #000; overflow: hidden; }
+        /* --- 4. THEATER (SPLIT) --- */
+        .theater-split { display: grid; grid-template-columns: 1fr 1fr; height: 60vh; background: #000; gap: 4px; padding: 8px; border-bottom: 2px solid var(--border); }
+        .stream-box { position: relative; border: 1px solid var(--border); background: #000; }
         .stream-box iframe { width: 100%; height: 100%; border: none; }
 
-        /* --- 6. GRID LAYOUT --- */
-        .grid-container { max-width: 1300px; margin: 40px auto; display: grid; grid-template-columns: 2fr 1fr; gap: 25px; padding: 0 20px; }
-        .card { background: var(--panel); border: 1px solid var(--border); padding: 30px; border-radius: 4px; }
-        .section-title { font-size: 1rem; font-weight: 700; letter-spacing: 4px; color: var(--accent); margin-bottom: 25px; text-transform: uppercase; border-left: 4px solid var(--neon); padding-left: 15px; }
+        /* --- 5. GRID LAYOUT --- */
+        .grid-container { max-width: 1400px; margin: 40px auto; display: grid; grid-template-columns: 2fr 1fr; gap: 25px; padding: 0 20px; }
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 25px; border-radius: 4px; margin-bottom: 25px; }
+        .section-title { font-size: 1rem; font-weight: 700; letter-spacing: 4px; color: var(--accent); margin-bottom: 20px; text-transform: uppercase; border-left: 4px solid var(--neon); padding-left: 15px; }
 
-        .sched-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--border); font-size: 1rem; font-weight: 500; }
+        /* Schedule Container */
+        .schedule-embed { width: 100%; height: 500px; background: #000; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+
+        /* Social Mini Grid */
         .social-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .soc-btn { background: var(--bg); border: 1px solid var(--border); padding: 15px; text-align: center; text-decoration: none; color: white; font-size: 0.8rem; font-weight: 700; transition: 0.3s; letter-spacing: 2px; }
-        .soc-btn:hover { border-color: var(--neon); background: rgba(0, 242, 255, 0.05); transform: translateY(-2px); }
+        .soc-btn:hover { border-color: var(--neon); background: rgba(0, 242, 255, 0.05); }
 
         @media (max-width: 1024px) {
             .theater-split { grid-template-columns: 1fr; height: 100vh; }
             .grid-container { grid-template-columns: 1fr; }
-            header { grid-template-columns: 1fr; height: auto; padding: 1.5rem; }
+            header { grid-template-columns: 1fr; }
             .logo-side, .live-status-container { display: none; }
         }
     </style>
@@ -99,17 +97,15 @@
 <body>
 
 <div id="loader">
-    <video id="intro-vid" muted autoplay playsinline>
-        <source src="intro.mp4" type="video/mp4">
-    </video>
+    <video id="intro-vid" muted autoplay playsinline><source src="intro.mp4" type="video/mp4"></video>
     <button id="skip-btn" onclick="enterHub()">SKIP INTRO</button>
 </div>
 
 <div class="ticker-wrap">
     <div class="ticker-move">
         <div class="ticker-item">LIVE BROADCAST INITIATED</div>
-        <div class="ticker-item">PXL SENSEI GAMING CORE: ONLINE</div>
-        <div class="ticker-item">ALL SYSTEMS NOMINAL // DATA SYNC COMPLETE</div>
+        <div class="ticker-item">PXL SENSEI GAMING HUB: ONLINE</div>
+        <div class="ticker-item">SCHEDULE AUTO-SYNCED WITH COMMAND CENTER</div>
     </div>
 </div>
 
@@ -132,11 +128,18 @@
 <div class="grid-container">
     <div class="column">
         <div class="card">
-            <h3 class="section-title">Weekly Schedule</h3>
-            <div class="sched-item"><span style="color:var(--neon)">MON</span> <span>18:00 - 22:00</span></div>
-            <div class="sched-item"><span style="color:var(--neon)">WED</span> <span>18:00 - 22:00</span></div>
-            <div class="sched-item"><span style="color:var(--neon)">FRI</span> <span>20:00 - LATE</span></div>
-            <div class="sched-item"><span style="color:var(--neon)">SUN</span> <span>12:00 - 16:00</span></div>
+            <h3 class="section-title">Schedule</h3>
+            <div class="schedule-embed">
+                <iframe src="https://www.twitch.tv/pxlsensei/schedule?customPlayer=true" width="100%" height="100%" frameborder="0"></iframe>
+            </div>
+            <p style="font-size: 0.7rem; color: var(--accent); margin-top: 10px; letter-spacing: 1px; font-weight: 600;">* AUTO-SYNCED WITH TWITCH DASHBOARD</p>
+        </div>
+
+        <div class="card">
+            <h3 class="section-title">Recent (YouTube)</h3>
+            <div style="aspect-ratio: 16/9; width: 100%;">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed?listType=user_uploads&list=UCxiaxssXjLp0Dz8g34DycnA" frameborder="0" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 
@@ -147,8 +150,13 @@
                 <a href="https://twitch.tv/pxlsensei" target="_blank" class="soc-btn">TWITCH</a>
                 <a href="https://youtube.com/@PXLSensei" target="_blank" class="soc-btn">YOUTUBE</a>
                 <a href="https://x.com/pxlsensei" target="_blank" class="soc-btn">X/TWITTER</a>
-                <a href="#" target="https://discord.gg/STxzWMZcFk" class="soc-btn">DISCORD</a>
+                <a href="https://discord.gg/STxzWMZcFk" target="_blank" class="soc-btn">DISCORD</a>
             </div>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <h3 class="section-title">Support Core</h3>
+            <a href="#" class="soc-btn" style="display:block; border-color: var(--neon); color: var(--neon);">DONATE / TIP</a>
         </div>
     </div>
 </div>
@@ -160,10 +168,7 @@
     video.onended = () => enterHub();
     function enterHub() {
         loader.style.opacity = '0';
-        setTimeout(() => { 
-            loader.style.visibility = 'hidden'; 
-            document.body.style.overflowY = 'auto'; 
-        }, 800);
+        setTimeout(() => { loader.style.visibility = 'hidden'; document.body.style.overflowY = 'auto'; }, 800);
     }
 
     window.onload = () => {
@@ -171,9 +176,7 @@
         document.getElementById('twitch-player').src = `https://player.twitch.tv/?channel=pxlsensei&parent=${currentHost}&autoplay=true&muted=true`;
     };
 
-    setTimeout(() => {
-        if(loader.style.visibility !== 'hidden') enterHub();
-    }, 10000);
+    setTimeout(() => { if(loader.style.visibility !== 'hidden') enterHub(); }, 10000);
 </script>
 
 </body>
