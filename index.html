@@ -6,45 +6,203 @@
     <title>PXL SENSEI | Digital Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --bg: #030406; --accent: #7c3aed; --neon: #00f2ff; --border: rgba(255, 255, 255, 0.1); 
-            --twitch: #9146FF; --youtube: #FF0000; --kick: #53FC18; --tiktok: #EE1D52;
+        :root {
+            --bg: #030406;
+            --accent: #7c3aed;
+            --neon: #00f2ff;
+            --border: rgba(255, 255, 255, 0.1);
+            --twitch: #9146FF;
+            --youtube: #FF0000;
+            --live: #ff0000;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-
-        /* --- LOADER --- */
-        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; transition: opacity 1.2s; }
-        #intro-vid { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
-        #skip-btn { position: absolute; bottom: 40px; right: 40px; z-index: 10001; padding: 15px 35px; border: 2px solid var(--neon); color: #fff; background: rgba(0,0,0,0.8); font-family: 'Syncopate'; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
-
-        /* --- HEADER --- */
-        header { padding: 25px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); background: rgba(3,4,6,0.95); position: sticky; top: 0; z-index: 999; }
-        .brand { display: flex; align-items: center; gap: 30px; font-family: 'Syncopate'; letter-spacing: 6px; font-size: 1.4rem; }
-        .logo-spin { width: 50px; height: 50px; animation: spinY 8s linear infinite; filter: drop-shadow(0 0 8px var(--accent)); }
+        body {
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        /* --- INTRO LOADER --- */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.2s ease;
+        }
+        #intro-vid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+        #skip-btn {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            z-index: 10001;
+            padding: 15px 35px;
+            border: 2px solid var(--neon);
+            color: #fff;
+            background: rgba(0,0,0,0.8);
+            font-family: 'Syncopate';
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        /* --- HEADER & SPINNING LOGOS --- */
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(3,4,6,0.95);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            font-family: 'Syncopate';
+            letter-spacing: 6px;
+            font-size: 1.4rem;
+        }
+        .brand span { color: var(--accent); }
         @keyframes spinY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-
+        .logo-spin {
+            width: 55px;
+            height: 55px;
+            animation: spinY 8s linear infinite;
+            filter: drop-shadow(0 0 10px var(--accent));
+        }
+        /* --- LIVE INDICATOR --- */
+        .live-indicator {
+            display: none; /* hidden by default - enable via JS when live */
+            align-items: center;
+            gap: 8px;
+            font-family: 'Syncopate';
+            font-size: 0.65rem;
+            position: absolute;
+            right: 40px;
+        }
+        .blink-circle {
+            width: 10px;
+            height: 10px;
+            background-color: var(--live);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--live);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        /* --- LABEL BAR --- */
+        .label-bar {
+            background: #0a0c10;
+            padding: 12px 30px;
+            font-family: 'Syncopate';
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            border-bottom: 1px solid var(--border);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         /* --- STREAM ROWS --- */
-        .stream-row { display: grid; grid-template-columns: 1fr 350px; height: 450px; border-bottom: 2px solid var(--border); background: #000; }
-        .label-bar { grid-column: span 2; background: #111; padding: 8px 25px; font-family: 'Syncopate'; font-size: 0.6rem; letter-spacing: 3px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
-        .twitch-color { color: var(--twitch); }
-        .youtube-color { color: var(--youtube); }
-
-        iframe { width: 100%; height: 100%; border: none; }
-
-        /* --- UPLINKS --- */
-        .links-grid { max-width: 1200px; margin: 50px auto; padding: 0 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .btn { padding: 20px 40px; border: 1px solid var(--border); color: #fff; text-decoration: none; font-family: 'Syncopate'; font-size: 0.75rem; transition: 0.4s; text-align: center; min-width: 200px; }
-        .btn:hover { border-color: var(--neon); box-shadow: 0 0 20px var(--neon); background: rgba(0, 242, 255, 0.05); }
-
-        @media (max-width: 1000px) { .stream-row { grid-template-columns: 1fr; height: auto; } .stream-row iframe:nth-child(odd) { height: 300px; } .stream-row iframe:nth-child(even) { height: 400px; } }
+        .stream-row {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            height: 520px;
+            background: #000;
+            margin-bottom: 6px;
+        }
+        .stream-container {
+            position: relative;
+            background: #111;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+        .fallback-msg {
+            position: absolute;
+            inset: 0;
+            background: #111;
+            color: #777;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter';
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 20px;
+        }
+        .unmute-btn {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            z-index: 10;
+            padding: 10px 18px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            font-family: 'Syncopate';
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        /* --- FOOTER LINKS --- */
+        .footer-links {
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 18px 40px;
+            border: 1px solid var(--border);
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Syncopate';
+            font-size: 0.75rem;
+            transition: 0.4s;
+            background: transparent;
+        }
+        .btn:hover {
+            border-color: var(--neon);
+            box-shadow: 0 0 20px var(--neon);
+            background: rgba(0, 242, 255, 0.08);
+        }
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1100px) {
+            .stream-row {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+                height: auto;
+            }
+            .stream-container:first-child { height: 40vh; }
+            .stream-container:last-child  { height: 50vh; border-top: 2px solid var(--border); }
+            .live-indicator { position: relative; right: auto; margin: 10px 0; }
+            header { flex-direction: column; gap: 15px; }
+        }
     </style>
 </head>
 <body>
 
 <div id="loader">
-    <video id="intro-vid" autoplay muted playsinline onended="exitLoader()">
+    <video id="intro-vid" autoplay muted playsinline>
         <source src="intro.mp4" type="video/mp4">
     </video>
     <button id="skip-btn" onclick="exitLoader()">SKIP INTRO</button>
@@ -52,51 +210,94 @@
 
 <header>
     <div class="brand">
-        <img src="logo.png" class="logo-spin">
+        <img src="logo.png" class="logo-spin" alt="Logo">
         <div>PXL <span>SENSEI</span></div>
-        <img src="logo.png" class="logo-spin">
+        <img src="logo.png" class="logo-spin" alt="Logo">
+    </div>
+    <div class="live-indicator">
+        <div class="blink-circle"></div>
+        <span>LIVE NOW</span>
     </div>
 </header>
 
-<div class="label-bar"><span class="twitch-color">TWITCH_FEED</span> <span>STATUS: SECURE</span></div>
+<div class="label-bar" style="border-top:none;">
+    <span style="color:var(--twitch)">TWITCH BROADCAST</span>
+    <span>LATENCY: LOW</span>
+</div>
 <section class="stream-row">
-    <iframe id="twitch-p" allowfullscreen></iframe>
-    <iframe id="twitch-c"></iframe>
+    <div class="stream-container">
+        <iframe id="twitch-p" allowfullscreen></iframe>
+        <button class="unmute-btn" onclick="document.getElementById('twitch-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
+        <div class="fallback-msg">Twitch Offline – Check back later!</div>
+    </div>
+    <div class="stream-container">
+        <iframe id="twitch-c"></iframe>
+    </div>
 </section>
 
-<div class="label-bar"><span class="youtube-color">YOUTUBE_FEED</span> <span>STATUS: SECURE</span></div>
+<div class="label-bar">
+    <span style="color:var(--youtube)">YOUTUBE BROADCAST</span>
+    <span>ENCRYPTION: AES-256</span>
+</div>
 <section class="stream-row">
-    <iframe id="youtube-p" allowfullscreen></iframe>
-    <iframe id="youtube-c"></iframe>
+    <div class="stream-container">
+        <iframe id="youtube-p" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+        <button class="unmute-btn" onclick="document.getElementById('youtube-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
+        <div class="fallback-msg">YouTube Offline – Check back later!</div>
+    </div>
+    <div class="stream-container">
+        <div id="youtube-chat-placeholder" class="fallback-msg" style="display:flex;">
+            Live chat available during streams
+        </div>
+        <iframe id="youtube-c" style="display:none;" allow="autoplay; encrypted-media"></iframe>
+    </div>
 </section>
 
-<div class="links-grid">
-    <a href="https://twitch.tv/pxlsensei" target="_blank" class="btn">TWITCH.TV</a>
-    <a href="https://youtube.com/@PXLSensei" target="_blank" class="btn">YOUTUBE.COM</a>
-    <a href="https://kick.com/pxlsensei" target="_blank" class="btn">KICK.COM</a>
+<div class="footer-links">
+    <a href="https://twitch.tv/pxlsensei" target="_blank" class="btn">TWITCH</a>
+    <a href="https://youtube.com/@PXLSensei" target="_blank" class="btn">YOUTUBE</a>
+    <a href="https://kick.com/pxlsensei" target="_blank" class="btn">KICK</a>
+    <a href="https://tiktok.com/@pxlsensei" target="_blank" class="btn">TIKTOK</a>
 </div>
 
 <script>
     function exitLoader() {
         const loader = document.getElementById('loader');
         loader.style.opacity = '0';
-        setTimeout(() => { loader.style.display = 'none'; document.getElementById('intro-vid').pause(); }, 1200);
+        setTimeout(() => {
+            loader.style.display = 'none';
+            document.getElementById('intro-vid').pause();
+        }, 1200);
     }
-    setTimeout(exitLoader, 10000);
+    document.getElementById('intro-vid').onended = exitLoader;
+    setTimeout(exitLoader, 10000); // 10s failsafe
 
     window.onload = () => {
         const host = window.location.hostname || "localhost";
-        const currentVid = "0AeedIUo_Y8"; // Remember to update this ID when you go live!
 
-        // Twitch URLs
-        document.getElementById('twitch-p').src = `https://player.twitch.tv/?channel=pxlsensei&parent=${host}&autoplay=true&muted=true`;
-        document.getElementById('twitch-c').src = `https://www.twitch.tv/embed/pxlsensei/chat?parent=${host}&darkpopout`;
-        
-        // YouTube URLs
-        document.getElementById('youtube-p').src = `https://www.youtube.com/embed/live_stream?channel=UCxiaxssXjLp0Dz8g34DycnA&autoplay=1&mute=1`;
-        document.getElementById('youtube-c').src = `https://www.youtube.com/live_chat?v=${currentVid}&embed_domain=${host}`;
+        // Twitch parent domains (add your GitHub Pages domain if needed)
+        const tParent = `&parent=${host}&parent=pxlsensei.github.io&parent=www.twitch.tv&parent=localhost`;
+
+        // 1. TWITCH
+        document.getElementById('twitch-p').src = `https://player.twitch.tv/?channel=pxlsensei&autoplay=true&muted=true${tParent}`;
+        document.getElementById('twitch-c').src = `https://www.twitch.tv/embed/pxlsensei/chat?darkpopout${tParent}`;
+
+        // 2. YOUTUBE - Live stream embed (auto shows current live or nothing)
+        const channelID = "UCxiaxssXjLp0Dz8g34DycnA";
+        document.getElementById('youtube-p').src = 
+            `https://www.youtube.com/embed/live_stream?channel=${channelID}&autoplay=1&mute=1`;
+
+        // Optional: You can manually set a video ID for chat during live (or use API later)
+        // const currentLiveID = "PASTE_NEW_VIDEO_ID_HERE_WHEN_LIVE";
+        const currentLiveID = null; // ← set this when you go live, or remove
+
+        if (currentLiveID) {
+            document.getElementById('youtube-c').src = 
+                `https://www.youtube.com/live_chat?v=${currentLiveID}&embed_domain=${host}`;
+            document.getElementById('youtube-c').style.display = 'block';
+            document.getElementById('youtube-chat-placeholder').style.display = 'none';
+        }
     };
 </script>
-
 </body>
 </html>
