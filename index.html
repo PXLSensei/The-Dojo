@@ -13,6 +13,8 @@
             --border: rgba(255, 255, 255, 0.1);
             --twitch: #9146FF;
             --youtube: #FF0000;
+            --kick: #53FC18; /* Official Kick green */
+            --tiktok: #FF0050;
             --live: #ff0000;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -181,9 +183,40 @@
             background: transparent;
         }
         .btn:hover {
-            border-color: var(--neon);
-            box-shadow: 0 0 20px var(--neon);
-            background: rgba(0, 242, 255, 0.08);
+            box-shadow: 0 0 20px currentColor;
+            background: rgba(255,255,255,0.05);
+        }
+        .btn-twitch {
+            color: var(--twitch);
+            border-color: var(--twitch);
+        }
+        .btn-twitch:hover {
+            border-color: var(--twitch);
+            background: rgba(145, 70, 255, 0.15);
+        }
+        .btn-youtube {
+            color: var(--youtube);
+            border-color: var(--youtube);
+        }
+        .btn-youtube:hover {
+            border-color: var(--youtube);
+            background: rgba(255, 0, 0, 0.15);
+        }
+        .btn-kick {
+            color: var(--kick);
+            border-color: var(--kick);
+        }
+        .btn-kick:hover {
+            border-color: var(--kick);
+            background: rgba(83, 252, 24, 0.15);
+        }
+        .btn-tiktok {
+            color: var(--tiktok);
+            border-color: var(--tiktok);
+        }
+        .btn-tiktok:hover {
+            border-color: var(--tiktok);
+            background: rgba(255, 0, 80, 0.15);
         }
         /* --- RESPONSIVE --- */
         @media (max-width: 1100px) {
@@ -253,11 +286,29 @@
     </div>
 </section>
 
+<div class="label-bar">
+    <span style="color:var(--kick)">KICK BROADCAST</span>
+    <span>LATENCY: LOW</span>
+</div>
+<section class="stream-row">
+    <div class="stream-container">
+        <iframe id="kick-p" allowfullscreen></iframe>
+        <button class="unmute-btn" onclick="document.getElementById('kick-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
+        <div class="fallback-msg">Kick Offline – Check back later!</div>
+    </div>
+    <div class="stream-container">
+        <div id="kick-chat-placeholder" class="fallback-msg" style="display:flex;">
+            Kick chat available during live streams
+        </div>
+        <iframe id="kick-c" style="display:none;"></iframe>
+    </div>
+</section>
+
 <div class="footer-links">
-    <a href="https://twitch.tv/pxlsensei" target="_blank" class="btn">TWITCH</a>
-    <a href="https://youtube.com/@PXLSensei" target="_blank" class="btn">YOUTUBE</a>
-    <a href="https://kick.com/pxlsensei" target="_blank" class="btn">KICK</a>
-    <a href="https://tiktok.com/@pxlsensei" target="_blank" class="btn">TIKTOK</a>
+    <a href="https://twitch.tv/pxlsensei" target="_blank" class="btn btn-twitch">TWITCH</a>
+    <a href="https://youtube.com/@PXLSensei" target="_blank" class="btn btn-youtube">YOUTUBE</a>
+    <a href="https://kick.com/pxlsensei" target="_blank" class="btn btn-kick">KICK</a>
+    <a href="https://tiktok.com/@pxlsensei" target="_blank" class="btn btn-tiktok">TIKTOK</a>
 </div>
 
 <script>
@@ -287,16 +338,24 @@
         document.getElementById('youtube-p').src = 
             `https://www.youtube.com/embed/live_stream?channel=${channelID}&autoplay=1&mute=1`;
 
-        // Optional: You can manually set a video ID for chat during live (or use API later)
-        // const currentLiveID = "PASTE_NEW_VIDEO_ID_HERE_WHEN_LIVE";
-        const currentLiveID = null; // ← set this when you go live, or remove
-
+        // Optional: Manually set a video ID for YouTube chat during live
+        const currentLiveID = null; // ← set this when you go live, e.g. "VIDEO_ID_HERE"
         if (currentLiveID) {
             document.getElementById('youtube-c').src = 
                 `https://www.youtube.com/live_chat?v=${currentLiveID}&embed_domain=${host}`;
             document.getElementById('youtube-c').style.display = 'block';
             document.getElementById('youtube-chat-placeholder').style.display = 'none';
         }
+
+        // 3. KICK - Player embed (auto shows if live)
+        document.getElementById('kick-p').src = 
+            `https://player.kick.com/pxlsensei?autoplay=true&muted=true`;
+
+        // Kick chat embed (if available; note: Kick doesn't officially support embed chat like Twitch/YouTube)
+        // As fallback, show placeholder. You can replace with a third-party chat widget if desired.
+        // For now: Placeholder only (since no official iframe chat embed exists as of late 2025)
+        document.getElementById('kick-c').style.display = 'none';
+        document.getElementById('kick-chat-placeholder').style.display = 'flex';
     };
 </script>
 </body>
