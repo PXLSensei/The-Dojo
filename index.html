@@ -23,7 +23,7 @@
         /* --- LOADER WITH AUTO-FADE --- */
         #loader { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #000; z-index: 5000; 
+            background: #000; z-index: 10000; 
             display: flex; align-items: center; justify-content: center;
             transition: opacity 1.5s ease, visibility 1.5s ease;
         }
@@ -41,7 +41,7 @@
             to { transform: rotateY(360deg); } 
         }
         .logo-spin { 
-            width: 150px; height: 150px; 
+            width: 50px; height: 50px; 
             animation: spinY 8s linear infinite; 
             filter: drop-shadow(0 0 5px var(--accent)); 
         }
@@ -165,5 +165,3 @@
 
 </body>
 </html>
-
-
