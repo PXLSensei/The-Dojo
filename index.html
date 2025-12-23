@@ -8,7 +8,175 @@
     
     <style>
         :root {
-            --bg: #030406; --panel: #0a0c10; --txt: #ffffff;
+            --bg: #030406; --pane<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PXL SENSEI | Digital Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #030406; --panel: rgba(10, 12, 16, 0.85); --txt: #ffffff;
+            --accent: #7c3aed; --neon: #00f2ff; --border: rgba(22, 27, 34, 0.8);
+            --live: #ff4655; --offline: #21262d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html, body { 
+            width: 100%; min-height: 100vh; background: var(--bg); color: var(--txt); 
+            font-family: 'Inter', sans-serif; letter-spacing: -0.01em;
+        }
+
+        /* --- BACKGROUND IMAGE CONFIG --- */
+        body {
+            background-image: linear-gradient(rgba(3, 4, 6, 0.7), rgba(3, 4, 6, 0.7)), url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* --- LOGO Y-AXIS SPIN --- */
+        @keyframes spinY { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+        .spinning-logo { width: 50px; height: 50px; animation: spinY 8s linear infinite; filter: drop-shadow(0 0 5px var(--accent)); }
+
+        /* --- LOADER --- */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity 1s ease, visibility 1s; }
+        #loader video { position: absolute; min-width: 100%; min-height: 100%; object-fit: cover; opacity: 0.6; }
+        #skip-btn { position: absolute; bottom: 50px; z-index: 10002; padding: 10px 40px; border: 1px solid rgba(255,255,255,0.2); color: #fff; background: rgba(0,0,0,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 5px; font-family: 'Syncopate', sans-serif; font-size: 0.6rem; backdrop-filter: blur(5px); cursor: pointer; }
+
+        /* --- HEADER --- */
+        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(3, 4, 6, 0.8); position: sticky; top: 0; z-index: 900; backdrop-filter: blur(15px); }
+        .brand-wrap { display: flex; align-items: center; gap: 20px; }
+        .logo-text { font-family: 'Syncopate', sans-serif; font-size: 1.2rem; font-weight: 700; color: #fff; text-transform: uppercase; text-decoration: none; letter-spacing: 10px; }
+        .logo-text span { color: var(--accent); }
+
+        /* --- TRIPLE-PANEL THEATER --- */
+        .theater-container { display: grid; grid-template-columns: 1fr 600px; height: 65vh; background: rgba(0,0,0,0.6); gap: 1px; border-bottom: 1px solid var(--border); backdrop-filter: blur(5px); }
+        .screens-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
+        .stream-box iframe { width: 100%; height: 100%; border: none; }
+        .chat-area { display: grid; grid-template-columns: 1fr 1fr; background: rgba(5, 5, 5, 0.6); }
+        .chat-pane { border-left: 1px solid var(--border); position: relative; }
+        .chat-label { position: absolute; top: 0; left: 0; background: var(--accent); color: #fff; font-size: 9px; padding: 2px 8px; font-family: 'Syncopate'; z-index: 10; letter-spacing: 1px; }
+
+        /* --- GRID CONTENT --- */
+        .grid-container { max-width: 1400px; margin: 60px auto; display: grid; grid-template-columns: 1.8fr 1fr; gap: 40px; padding: 0 40px; padding-bottom: 100px; }
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 40px; border-radius: 4px; backdrop-filter: blur(10px); }
+        .section-title { font-family: 'Syncopate', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 5px; color: #fff; margin-bottom: 35px; text-transform: uppercase; display: flex; align-items: center; gap: 15px; }
+        .section-title::after { content: ""; height: 1px; flex-grow: 1; background: var(--border); }
+
+        /* --- BUTTONS --- */
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .soc-btn { border: 1px solid var(--border); padding: 18px; text-decoration: none; color: #fff; font-size: 0.7rem; font-weight: 700; display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); transition: 0.3s; }
+        .soc-btn:hover { border-color: var(--neon); background: rgba(0, 242, 255, 0.1); }
+
+        @media (max-width: 1024px) {
+            .theater-container { grid-template-columns: 1fr; height: auto; }
+            .screens-wrap { grid-template-columns: 1fr; }
+            .chat-area { display: none; }
+            .grid-container { grid-template-columns: 1fr; padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader">
+    <video id="intro-vid" muted autoplay playsinline><source src="intro.mp4" type="video/mp4"></video>
+    <button id="skip-btn" onclick="enterHub()">Enter Hub</button>
+</div>
+
+<header>
+    <div class="brand-wrap">
+        <img src="logo.png" class="spinning-logo" alt="Logo">
+        <a href="#" class="logo-text">PXL <span>SENSEI</span></a>
+    </div>
+    <div id="status-btn" style="border: 1px solid var(--border); padding: 8px 15px; font-size: 0.6rem; font-family: 'Syncopate'; display: flex; align-items: center; gap: 8px;">
+        <div style="width:4px; height:4px; background:#484f58; border-radius:50%;"></div> 
+        <span id="status-text">SIGNAL OFFLINE</span>
+    </div>
+</header>
+
+<section class="theater-container">
+    <div class="screens-wrap">
+        <div class="stream-box"><iframe id="twitch-player" src="" allowfullscreen></iframe></div>
+        <div class="stream-box">
+            <iframe id="youtube-player" 
+                    src="https://www.youtube.com/embed/fDlkYYQ4rUc?autoplay=1&mute=1&loop=1&playlist=fDlkYYQ4rUc" 
+                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="chat-area">
+        <div class="chat-pane">
+            <div class="chat-label">TWITCH</div>
+            <iframe src="https://www.twitch.tv/embed/pxlsensei/chat?parent=localhost&darkpopout" width="100%" height="100%"></iframe>
+        </div>
+        <div class="chat-pane">
+            <div class="chat-label">YOUTUBE</div>
+            <iframe src="https://www.youtube.com/live_chat?v=fDlkYYQ4rUc&embed_domain=localhost" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+</section>
+
+<div class="grid-container">
+    <div class="column">
+        <div class="card">
+            <h3 class="section-title">Broadcast Schedule</h3>
+            <div style="height: 500px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden;">
+                <iframe src="https://www.twitch.tv/pxlsensei/schedule?customPlayer=true" width="100%" height="100%" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="card">
+            <h3 class="section-title">Asset Uplinks</h3>
+            <div class="social-grid">
+                <a href="https://twitch.tv/pxlsensei" target="_blank" class="soc-btn">TWITCH <span>01</span></a>
+                <a href="https://youtube.com/@PXLSensei" target="_blank" class="soc-btn">YOUTUBE <span>02</span></a>
+                <a href="https://kick.com/pxlsensei" target="_blank" class="soc-btn">KICK <span>03</span></a>
+                <a href="https://x.com/pxlsensei" target="_blank" class="soc-btn">X.COM <span>04</span></a>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 40px;">
+            <h3 class="section-title">Support</h3>
+            <p style="font-size: 0.75rem; color: #848d97; margin-bottom: 25px;">Data stream maintenance and asset acquisition support.</p>
+            <a href="#" class="soc-btn" style="border-color: var(--neon); color: var(--neon); justify-content: center;">INITIATE DONATION</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function enterHub() {
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => { document.getElementById('loader').style.visibility = 'hidden'; }, 1000);
+    }
+
+    async function checkStatus() {
+        const username = 'pxlsensei';
+        try {
+            const res = await fetch(`https://decapi.me/twitch/uptime/${username}`);
+            const data = await res.text();
+            if (!data.includes("offline")) {
+                document.getElementById('status-btn').style.borderColor = "#ff4655";
+                document.getElementById('status-btn').style.color = "#ff4655";
+                document.getElementById('status-text').innerText = "LIVE SIGNAL";
+            }
+        } catch (e) {}
+    }
+
+    window.onload = () => {
+        const host = window.location.hostname || "localhost";
+        document.getElementById('twitch-player').src = `https://player.twitch.tv/?channel=pxlsensei&parent=${host}&autoplay=true&muted=true`;
+        checkStatus();
+    };
+</script>
+
+</body>
+</html>l: #0a0c10; --txt: #ffffff;
             --accent: #7c3aed; --neo<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -386,4 +554,5 @@
 
 </body>
 </html>
+
 
