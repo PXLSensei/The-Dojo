@@ -100,7 +100,10 @@
         <button class="unmute-btn" onclick="document.getElementById('youtube-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
     </div>
     <div class="stream-container">
-        <div id="youtube-chat-placeholder" class="status-msg" style="position:static; transform:none; background:#111; padding:20px;">Live chat available during streams</div>
+        <div id="youtube-chat-placeholder" style="height:100%; background:#111; color:#aaa; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;">
+            <p>Live YouTube chat available during streams</p>
+            <small>(Chat will appear here when live)</small>
+        </div>
         <iframe id="youtube-c" style="display:none;" allow="autoplay; encrypted-media" loading="lazy"></iframe>
     </div>
 </section>
@@ -116,7 +119,10 @@
         <button class="unmute-btn" onclick="document.getElementById('kick-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
     </div>
     <div class="stream-container">
-        <div id="kick-chat-placeholder" class="status-msg" style="position:static; transform:none; background:#111; padding:20px;">Kick chat available during live streams</div>
+        <div id="kick-chat-placeholder" style="height:100%; background:#111; color:#aaa; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;">
+            <p>Kick chat not available as embed</p>
+            <a href="https://kick.com/pxlsensei/chat" target="_blank" style="color:var(--kick); text-decoration:underline; font-weight:bold; margin-top:10px;">Open Kick Chat in New Tab →</a>
+        </div>
         <iframe id="kick-c" style="display:none;" loading="lazy"></iframe>
     </div>
 </section>
@@ -143,12 +149,13 @@
     function hideStatusIfLoaded(iframeId, statusId) {
         const iframe = document.getElementById(iframeId);
         const status = document.getElementById(statusId);
+        if (!iframe || !status) return;
         iframe.onload = () => {
             setTimeout(() => {
                 if (iframe.contentDocument && iframe.contentDocument.body.innerHTML.length > 100) {
                     status.style.display = 'none';
                 }
-            }, 5000); // give time for player to initialize
+            }, 5000);
         };
     }
 
@@ -160,11 +167,19 @@
         document.getElementById('twitch-p').src = `https://player.twitch.tv/?channel=pxlsensei&autoplay=true&muted=true${tParent}`;
         document.getElementById('twitch-c').src = `https://www.twitch.tv/embed/pxlsensei/chat?darkpopout${tParent}`;
 
-        // YouTube live stream
+        // YouTube live stream player
         const channelID = "UCxiaxssXjLp0Dz8g34DycnA";
         document.getElementById('youtube-p').src = `https://www.youtube.com/embed/live_stream?channel=${channelID}&autoplay=1&mute=1`;
 
-        // Kick
+        // YouTube live chat - update this ID when you start a new live stream
+        const currentLiveID = null; // ← Change to "VIDEO_ID_HERE" when live (get from YouTube Studio URL)
+        if (currentLiveID) {
+            document.getElementById('youtube-c').src = `https://www.youtube.com/live_chat?v=${currentLiveID}&embed_domain=${host}`;
+            document.getElementById('youtube-c').style.display = 'block';
+            document.getElementById('youtube-chat-placeholder').style.display = 'none';
+        }
+
+        // Kick player
         document.getElementById('kick-p').src = `https://player.kick.com/pxlsensei?autoplay=true&muted=true`;
 
         // Auto-hide status messages when content loads
