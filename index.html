@@ -10,37 +10,43 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             background: linear-gradient(rgba(3,4,6,0.85), rgba(3,4,6,0.85)), url('background.jpg') center/cover fixed;
-            color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh;
+            color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- LOADER/INTRO --- */
+        /* --- FIXED LOADER LOGIC --- */
         #loader { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #000; z-index: 10000; transition: opacity 0.8s ease; 
+            background: #000; z-index: 10000; 
             display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease; 
         }
-        #intro-vid { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+        
+        /* The video should NOT loop if you want it to end, 
+           but usually, a loop is better until the user clicks 'Enter' */
+        #intro-vid { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        
         #skip-btn { 
-            position: relative; z-index: 10001; padding: 12px 35px; 
-            border: 1px solid rgba(255,255,255,0.3); color: #fff; background: rgba(0,0,0,0.6); 
-            font-family: 'Syncopate'; font-size: 0.65rem; letter-spacing: 5px; cursor: pointer;
-            backdrop-filter: blur(5px);
+            position: relative; z-index: 10001; padding: 20px 50px; 
+            border: 2px solid var(--neon); color: #fff; background: rgba(0,0,0,0.8); 
+            font-family: 'Syncopate'; font-size: 0.8rem; letter-spacing: 5px; cursor: pointer;
+            backdrop-filter: blur(10px); transition: 0.3s;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
         }
+        #skip-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 40px var(--neon); }
 
-        /* --- SPINNING LOGO --- */
+        /* --- UI ELEMENTS --- */
         @keyframes spinY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
         .logo-spin { width: 45px; height: 45px; animation: spinY 10s linear infinite; filter: drop-shadow(0 0 8px var(--accent)); }
 
-        /* --- THEATER --- */
+        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(3,4,6,0.9); position: sticky; top: 0; z-index: 900; }
+        .brand { display: flex; align-items: center; gap: 15px; font-family: 'Syncopate'; letter-spacing: 6px; text-decoration: none; color: #fff; }
+
         .theater { display: grid; grid-template-columns: 1fr 450px; height: 60vh; background: #000; border-bottom: 1px solid var(--border); }
         .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
         .chat-grid { display: grid; grid-template-rows: 1fr 1fr; background: var(--border); }
         iframe { width: 100%; height: 100%; border: none; background: #000; }
         .label { position: absolute; top: 0; left: 0; background: var(--accent); font-size: 8px; padding: 4px 10px; font-family: 'Syncopate'; z-index: 5; }
 
-        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(3,4,6,0.9); }
-        .brand { display: flex; align-items: center; gap: 15px; font-family: 'Syncopate'; letter-spacing: 6px; text-decoration: none; color: #fff; }
-        
         .grid { max-width: 1300px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 350px; gap: 25px; }
         .card { background: rgba(10,12,16,0.8); border: 1px solid var(--border); padding: 30px; border-radius: 2px; }
         .btn { display: block; padding: 15px; border: 1px solid var(--border); color: #fff; text-decoration: none; font-size: 0.65rem; font-family: 'Syncopate'; margin-bottom: 10px; transition: 0.2s; text-align: center; }
@@ -55,7 +61,7 @@
     <video id="intro-vid" autoplay muted playsinline loop>
         <source src="intro.mp4" type="video/mp4">
     </video>
-    <button id="skip-btn" onclick="enterHub()">ENTER HUB</button>
+    <button id="skip-btn" onclick="enterHub()">INITIALIZE PXL_SENSEI</button>
 </div>
 
 <header>
@@ -88,21 +94,37 @@
 </div>
 
 <script>
+    // FIXED FADE OUT FUNCTION
     function enterHub() {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 800);
+        const loader = document.getElementById('loader');
+        const introVid = document.getElementById('intro-vid');
+        
+        // 1. Start the fade
+        loader.style.opacity = '0';
+        
+        // 2. Disable interactions immediately
+        loader.style.pointerEvents = 'none';
+        
+        // 3. Pause video to save CPU
+        introVid.pause();
+
+        // 4. Remove from layout after fade finishes
+        setTimeout(() => { 
+            loader.style.visibility = 'hidden';
+            loader.style.display = 'none'; 
+        }, 800);
     }
 
     window.onload = () => {
         const domain = window.location.hostname || "localhost";
-        const ytChannelID = "UC_un3YZXBtAlCyApGu4_eSP"; // YOUR CHANNEL ID
-        const activeVideoID = "fDlkYYQ4rUc"; // Needed for YouTube Chat to work
+        const ytChannelID = "UC_un3YZXBtAlCyApGu4_eSP";
+        const activeVideoID = "fDlkYYQ4rUc"; 
 
         // Twitch
         document.getElementById('twitch-player').src = `https://player.twitch.tv/?channel=pxlsensei&parent=${domain}&autoplay=true&muted=true`;
         document.getElementById('twitch-chat').src = `https://www.twitch.tv/embed/pxlsensei/chat?parent=${domain}&darkpopout`;
         
-        // YouTube (Forces autoplay + muted to ensure it bypasses browser blocks)
+        // YouTube
         document.getElementById('youtube-player').src = `https://www.youtube.com/embed/live_stream?channel=${ytChannelID}&autoplay=1&mute=1`;
         document.getElementById('youtube-chat').src = `https://www.youtube.com/live_chat?v=${activeVideoID}&embed_domain=${domain}`;
     };
