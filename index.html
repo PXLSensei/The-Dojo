@@ -3,190 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PXL SENSEI | Digital Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <title>PXL Sensei | The Official Dojo</title>
     <style>
         :root {
-            --bg: #030406; --accent: #7c3aed; --neon: #00f2ff; --border: rgba(255, 255, 255, 0.1);
-            --twitch: #9146FF; --youtube: #FF0000; --kick: #53FC18; --tiktok: #FF0050; --live: #ff0000;
+            --bg: #0b0e14; --panel: #161b22; --txt: #ffffff;
+            --accent: #8b5cf6; --neon: #00f2ff; --live: #ff4655;
+            --border: #30363d; --muted: #848d97; --gold: #ffd700;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; transition: opacity 1.2s ease; }
-        #intro-vid { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
-        #skip-btn { position: absolute; bottom: 40px; right: 40px; z-index: 10001; padding: 15px 35px; border: 2px solid var(--neon); color: #fff; background: rgba(0,0,0,0.8); font-family: 'Syncopate'; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
-        header { padding: 20px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); background: rgba(3,4,6,0.95); position: sticky; top: 0; z-index: 999; backdrop-filter: blur(10px); }
-        .brand { display: flex; align-items: center; gap: 30px; font-family: 'Syncopate'; letter-spacing: 6px; font-size: 1.4rem; }
-        .brand span { color: var(--accent); }
-        @keyframes spinY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-        .logo-spin { width: 55px; height: 55px; animation: spinY 8s linear infinite; filter: drop-shadow(0 0 10px var(--accent)); }
-        .live-indicator { display: none; align-items: center; gap: 8px; font-family: 'Syncopate'; font-size: 0.65rem; position: absolute; right: 40px; }
-        .blink-circle { width: 10px; height: 10px; background-color: var(--live); border-radius: 50%; box-shadow: 0 0 10px var(--live); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .label-bar { background: #0a0c10; padding: 12px 30px; font-family: 'Syncopate'; font-size: 0.65rem; letter-spacing: 3px; border-bottom: 1px solid var(--border); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .stream-row { display: grid; grid-template-columns: 1fr 380px; height: 520px; background: #000; margin-bottom: 6px; }
-        .stream-container { background: #111; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; background: #000; }
-        .status-msg { 
-            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.7); color: #aaa; padding: 8px 16px; border-radius: 4px;
-            font-size: 0.9rem; z-index: 10; display: none;
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg);
+            background-image: linear-gradient(rgba(11, 14, 20, 0.9), rgba(11, 14, 20, 0.9)), 
+                              url('https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=1920');
+            background-size: cover; background-attachment: fixed;
+            color: var(--txt); overflow-x: hidden;
         }
-        .unmute-btn { position: absolute; bottom: 15px; left: 15px; z-index: 10; padding: 10px 18px; background: rgba(0,0,0,0.7); border: 1px solid var(--neon); color: var(--neon); font-family: 'Syncopate'; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
-        .footer-links { padding: 50px 20px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
-        .btn { padding: 18px 40px; border: 1px solid var(--border); color: #fff; text-decoration: none; font-family: 'Syncopate'; font-size: 0.75rem; transition: 0.4s; background: transparent; }
-        .btn:hover { box-shadow: 0 0 20px currentColor; background: rgba(255,255,255,0.05); }
-        .btn-twitch { color: var(--twitch); border-color: var(--twitch); }
-        .btn-twitch:hover { background: rgba(145, 70, 255, 0.15); }
-        .btn-youtube { color: var(--youtube); border-color: var(--youtube); }
-        .btn-youtube:hover { background: rgba(255, 0, 0, 0.15); }
-        .btn-kick { color: var(--kick); border-color: var(--kick); }
-        .btn-kick:hover { background: rgba(83, 252, 24, 0.15); }
-        .btn-tiktok { color: var(--tiktok); border-color: var(--tiktok); }
-        .btn-tiktok:hover { background: rgba(255, 0, 80, 0.15); }
-        @media (max-width: 1100px) {
-            .stream-row { grid-template-columns: 1fr; grid-template-rows: auto auto; height: auto; }
-            .stream-container:first-child { height: 40vh; }
-            .stream-container:last-child { height: 50vh; border-top: 2px solid var(--border); }
-            .live-indicator { position: relative; right: auto; margin: 10px 0; }
-            header { flex-direction: column; gap: 15px; }
+
+        /* --- LOADER --- */
+        #loader { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; display: flex; align-items: center; 
+            justify-content: center; z-index: 10000; transition: 0.8s ease-in-out;
         }
+        #loader video { position: absolute; min-width: 100%; min-height: 100%; object-fit: cover; }
+
+        /* --- ENTER BUTTON AT BOTTOM RIGHT --- */
+        .skip-btn { 
+            position: absolute; bottom: 40px; right: 40px; z-index: 10001; 
+            padding: 12px 35px; border: 2px solid var(--neon); color: var(--neon); 
+            background: rgba(0,0,0,0.7); cursor: pointer; font-weight: 900; 
+            text-transform: uppercase; letter-spacing: 2px;
+            transition: 0.3s; box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+        }
+        .skip-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
+
+        /* --- HEADER & GLOWING SPINNING LOGO --- */
+        header { 
+            padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 2px solid var(--accent); background: rgba(11, 14, 20, 0.95);
+            position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
+        }
+
+        .logo-container { position: relative; display: flex; align-items: center; justify-content: center; perspective: 1000px; }
+        
+        .logo-watermark {
+            position: absolute; width: 100px; height: 100px; opacity: 0.4;
+            filter: drop-shadow(0 0 10px var(--accent)); /* Initial Glow */
+            animation: spinHorizontal 8s linear infinite, glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes spinHorizontal {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { filter: drop-shadow(0 0 5px var(--accent)) grayscale(0.5); }
+            50% { filter: drop-shadow(0 0 20px var(--neon)) grayscale(0); }
+        }
+
+        .logo { font-size: 1.8rem; font-weight: 900; color: var(--accent); text-decoration: none; z-index: 2; letter-spacing: 1px; }
+        .logo span { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 50px; border-radius: 15px; text-align: center; }
+        .title { color: var(--neon); font-size: 2.5rem; margin-bottom: 20px; text-transform: uppercase; }
+
     </style>
 </head>
 <body>
 
 <div id="loader">
-    <video id="intro-vid" autoplay muted playsinline>
-        <source src="intro.mp4" type="video/mp4">
+    <video id="intro-vid" muted autoplay playsinline>
+        <source src="file:///G:/intro.mp4" type="video/mp4">
     </video>
-    <button id="skip-btn" onclick="exitLoader()">SKIP INTRO</button>
+    <button class="skip-btn" onclick="enterDojo()">Enter Dojo</button>
 </div>
 
 <header>
-    <div class="brand">
-        <img src="logo.png" class="logo-spin" alt="Logo">
-        <div>PXL <span>SENSEI</span></div>
-        <img src="logo.png" class="logo-spin" alt="Logo">
-    </div>
-    <div class="live-indicator">
-        <div class="blink-circle"></div>
-        <span>LIVE NOW</span>
+    <div class="logo-container">
+        <img src="file:///G:/Stream Assests/Logos/A bold, modern gaming logo featuring a man's face with a long, gray-tinged beard.png" class="logo-watermark">
+        <a href="#" class="logo">PXL <span>SENSEI</span></a>
     </div>
 </header>
 
-<div class="label-bar" style="border-top:none;">
-    <span style="color:var(--twitch)">TWITCH BROADCAST</span>
-    <span>LATENCY: LOW</span>
-</div>
-<section class="stream-row">
-    <div class="stream-container">
-        <iframe id="twitch-p" allowfullscreen allow="autoplay *" loading="lazy"></iframe>
-        <div id="twitch-status" class="status-msg">Twitch Offline – Check back later!</div>
-        <button class="unmute-btn" onclick="document.getElementById('twitch-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
+<main class="main-content">
+    <div class="card">
+        <h2 class="title">Systems Operational</h2>
+        <p style="color: var(--muted); font-size: 1.1rem;">Welcome back, Sensei. The transmission hub is ready for command.</p>
     </div>
-    <div class="stream-container">
-        <iframe id="twitch-c" allow="autoplay" loading="lazy"></iframe>
-    </div>
-</section>
-
-<div class="label-bar">
-    <span style="color:var(--youtube)">YOUTUBE BROADCAST</span>
-    <span>ENCRYPTION: AES-256</span>
-</div>
-<section class="stream-row">
-    <div class="stream-container">
-        <iframe id="youtube-p" allow="autoplay; encrypted-media; fullscreen" allowfullscreen loading="lazy"></iframe>
-        <div id="youtube-status" class="status-msg">YouTube Offline – Check back later!</div>
-        <button class="unmute-btn" onclick="document.getElementById('youtube-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
-    </div>
-    <div class="stream-container">
-        <div id="youtube-chat-placeholder" style="height:100%; background:#111; color:#aaa; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;">
-            <p>Live YouTube chat available during streams</p>
-            <small>(Chat will appear here when live)</small>
-        </div>
-        <iframe id="youtube-c" style="display:none;" allow="autoplay; encrypted-media" loading="lazy"></iframe>
-    </div>
-</section>
-
-<div class="label-bar">
-    <span style="color:var(--kick)">KICK BROADCAST</span>
-    <span>LATENCY: LOW</span>
-</div>
-<section class="stream-row">
-    <div class="stream-container">
-        <iframe id="kick-p" allowfullscreen allow="autoplay" loading="lazy"></iframe>
-        <div id="kick-status" class="status-msg">Kick Offline – Check back later!</div>
-        <button class="unmute-btn" onclick="document.getElementById('kick-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
-    </div>
-    <div class="stream-container">
-        <div id="kick-chat-placeholder" style="height:100%; background:#111; color:#aaa; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;">
-            <p>Kick chat not available as embed</p>
-            <a href="https://kick.com/pxlsensei/chat" target="_blank" style="color:var(--kick); text-decoration:underline; font-weight:bold; margin-top:10px;">Open Kick Chat in New Tab →</a>
-        </div>
-        <iframe id="kick-c" style="display:none;" loading="lazy"></iframe>
-    </div>
-</section>
-
-<div class="footer-links">
-    <a href="https://twitch.tv/pxlsensei" target="_blank" class="btn btn-twitch">TWITCH</a>
-    <a href="https://youtube.com/@PXLSensei" target="_blank" class="btn btn-youtube">YOUTUBE</a>
-    <a href="https://kick.com/pxlsensei" target="_blank" class="btn btn-kick">KICK</a>
-    <a href="https://tiktok.com/@pxlsensei" target="_blank" class="btn btn-tiktok">TIKTOK</a>
-</div>
+</main>
 
 <script>
-    function exitLoader() {
-        const loader = document.getElementById('loader');
+    const loader = document.getElementById('loader');
+    const video = document.getElementById('intro-vid');
+
+    // FAILSAFE: If video fails or G: drive is blocked, clear the screen after 1.5s
+    const failSafe = setTimeout(() => {
+        console.log("Failsafe triggered: Displaying site.");
+        enterDojo();
+    }, 1500);
+
+    video.onplay = () => {
+        clearTimeout(failSafe); // If video plays, let it run
+    };
+
+    video.onended = () => enterDojo();
+
+    function enterDojo() {
         loader.style.opacity = '0';
+        loader.style.pointerEvents = 'none'; // Prevents clicking button after it fades
         setTimeout(() => {
             loader.style.display = 'none';
-            document.getElementById('intro-vid').pause();
-        }, 1200);
+        }, 800);
     }
-    document.getElementById('intro-vid').onended = exitLoader;
-    setTimeout(exitLoader, 10000);
-
-    function hideStatusIfLoaded(iframeId, statusId) {
-        const iframe = document.getElementById(iframeId);
-        const status = document.getElementById(statusId);
-        if (!iframe || !status) return;
-        iframe.onload = () => {
-            setTimeout(() => {
-                if (iframe.contentDocument && iframe.contentDocument.body.innerHTML.length > 100) {
-                    status.style.display = 'none';
-                }
-            }, 5000);
-        };
-    }
-
-    window.onload = () => {
-        const host = window.location.hostname || "localhost";
-        const tParent = `&parent=${host}&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=pxlsensei.com&parent=www.pxlsensei.com&parent=127.0.0.1&parent=localhost&parent=www.twitch.tv`;
-
-        // Twitch player + chat
-        document.getElementById('twitch-p').src = `https://player.twitch.tv/?channel=pxlsensei&autoplay=true&muted=true${tParent}`;
-        document.getElementById('twitch-c').src = `https://www.twitch.tv/embed/pxlsensei/chat?darkpopout${tParent}`;
-
-        // YouTube live stream player
-        const channelID = "UCxiaxssXjLp0Dz8g34DycnA";
-        document.getElementById('youtube-p').src = `https://www.youtube.com/embed/live_stream?channel=${channelID}&autoplay=1&mute=1`;
-
-        // YouTube live chat - update this ID when you start a new live stream
-        const currentLiveID = null; // ← Change to "VIDEO_ID_HERE" when live (get from YouTube Studio URL)
-        if (currentLiveID) {
-            document.getElementById('youtube-c').src = `https://www.youtube.com/live_chat?v=${currentLiveID}&embed_domain=${host}`;
-            document.getElementById('youtube-c').style.display = 'block';
-            document.getElementById('youtube-chat-placeholder').style.display = 'none';
-        }
-
-        // Kick player
-        document.getElementById('kick-p').src = `https://player.kick.com/pxlsensei?autoplay=true&muted=true`;
-
-        // Auto-hide status messages when content loads
-        hideStatusIfLoaded('twitch-p', 'twitch-status');
-        hideStatusIfLoaded('youtube-p', 'youtube-status');
-        hideStatusIfLoaded('kick-p', 'kick-status');
-    };
 </script>
+
 </body>
 </html>
