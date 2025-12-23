@@ -48,7 +48,7 @@
             z-index: 9999;
             display: grid;
             place-items: center;
-            transition: opacity 1s ease;
+            transition: opacity 1.2s ease;
         }
 
         #loader.hidden {
@@ -142,7 +142,7 @@
 
         /* Main content */
         main {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 5rem auto 4rem;
             padding: 0 1.5rem;
         }
@@ -201,6 +201,39 @@
             50% { opacity: 0.6; }
         }
 
+        /* Twitch embed wrapper */
+        .twitch-embed-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        .twitch-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .twitch-fallback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 1.2rem;
+            background: rgba(0,0,0,0.7);
+        }
+
         /* Social icons */
         .socials {
             display: flex;
@@ -238,8 +271,8 @@
 <body>
 
 <div id="loader">
-    <!-- Upload your intro video and update path -->
-    <video id="intro-vid" muted autoplay playsinline loop>
+    <!-- Upload your intro video to the repo root and update path if needed -->
+    <video id="intro-vid" muted autoplay playsinline>
         <source src="./intro.mp4" type="video/mp4" />
         <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800" alt="Loading..." />
     </video>
@@ -249,7 +282,7 @@
 
 <header>
     <div class="logo-container">
-        <!-- Upload your logo and update path -->
+        <!-- Upload your logo to the repo root -->
         <img src="./logo.png" class="logo-watermark" alt="PXL Sensei logo" />
         <a href="#" class="logo">PXL <span>SENSEI</span></a>
     </div>
@@ -265,19 +298,28 @@
             Drop in, turn up — let's run it.
         </p>
 
-        <!-- Social Icons -->
+        <!-- Twitch Live Player Embed -->
+        <div class="twitch-embed-container">
+            <iframe 
+                src="https://player.twitch.tv/?channel=pxlsensei&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=localhost&autoplay=true&muted=true" 
+                allowfullscreen>
+            </iframe>
+            <div class="twitch-fallback">Loading Twitch stream... (if blank: check if live on twitch.tv/pxlsensei)</div>
+        </div>
+
+        <!-- Social Icons with real platform colors -->
         <div class="socials">
             <a href="https://www.twitch.tv/pxlsensei" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968819.png" alt="Twitch" class="social-icon" style="filter: hue-rotate(200deg) saturate(150%);" />
+                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968819.png" alt="Twitch" class="social-icon" style="filter: hue-rotate(260deg) saturate(200%) brightness(1.1);" />
             </a>
             <a href="https://www.youtube.com/@PXLSensei" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" class="social-icon" style="filter: hue-rotate(0deg) saturate(300%);" />
+                <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" class="social-icon" style="filter: hue-rotate(0deg) saturate(400%) brightness(1.15);" />
             </a>
             <a href="https://kick.com/pxlsensei" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968898.png" alt="Kick" class="social-icon" style="filter: hue-rotate(80deg) saturate(200%);" />
+                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968898.png" alt="Kick" class="social-icon" style="filter: hue-rotate(80deg) saturate(250%) brightness(1.2);" />
             </a>
             <a href="https://www.tiktok.com/@pxlsensei" target="_blank">
-                <img src="https://i.pinimg.com/originals/4e/7e/2b/4e7e2b4e6e5f6e5f6e5f6e5f6e5f6e5f.png" alt="TikTok" class="social-icon" style="filter: brightness(1.2) contrast(1.15) hue-rotate(320deg);" />
+                <img src="https://i.pinimg.com/originals/4e/7e/2b/4e7e2b4e6e5f6e5f6e5f6e5f6e5f6e5f.png" alt="TikTok" class="social-icon" style="filter: hue-rotate(320deg) saturate(180%) brightness(1.25);" />
             </a>
         </div>
     </div>
@@ -285,6 +327,7 @@
 
 <script>
     const loader = document.getElementById('loader');
+    const video = document.getElementById('intro-vid');
 
     function enterStream() {
         loader.classList.add('hidden');
@@ -293,14 +336,16 @@
         }, 1200);
     }
 
-    const autoEnter = setTimeout(enterStream, 12000);
-
-    document.getElementById('intro-vid').onended = () => {
-        clearTimeout(autoEnter);
+    // Auto-enter when video finishes playing once
+    video.onended = () => {
         enterStream();
     };
 
-    document.getElementById('intro-vid').onplay = () => clearTimeout(autoEnter);
+    // Safety net: auto-enter after 30 seconds max (if video fails or is very long)
+    const autoEnter = setTimeout(enterStream, 30000);
+
+    // If video starts playing, clear safety net
+    video.onplay = () => clearTimeout(autoEnter);
 </script>
 </body>
 </html>
