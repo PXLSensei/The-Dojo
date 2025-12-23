@@ -27,13 +27,17 @@
             display: flex; align-items: center; justify-content: center;
             transition: opacity 1.5s ease, visibility 1.5s ease;
         }
+        /* Prevents loader from blocking clicks after fade */
+        #loader.fade-out { pointer-events: none; opacity: 0; visibility: hidden; }
+
         #intro-vid { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
         #skip-btn { 
             position: relative; z-index: 10001; padding: 15px 40px; 
-            border: 1px solid var(--neon); color: #fff; background: rgba(0,0,0,0.7); 
+            border: 2px solid var(--neon); color: #fff; background: rgba(0,0,0,0.7); 
             font-family: 'Syncopate'; font-size: 0.7rem; letter-spacing: 5px; cursor: pointer;
-            text-transform: uppercase;
+            text-transform: uppercase; transition: 0.3s;
         }
+        #skip-btn:hover { background: var(--neon); color: #000; }
 
         /* --- LOGO Y-AXIS SPIN --- */
         @keyframes spinY { 
@@ -41,14 +45,14 @@
             to { transform: rotateY(360deg); } 
         }
         .logo-spin { 
-            width: 150px; height: 150px; 
+            width: 80px; height: 80px; /* Adjusted to fit header better */
             animation: spinY 8s linear infinite; 
-            filter: drop-shadow(0 0 5px var(--accent)); 
+            filter: drop-shadow(0 0 10px var(--accent)); 
         }
 
         /* --- UI ELEMENTS --- */
         header { 
-            padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; 
+            padding: 0.5rem 5%; display: flex; justify-content: space-between; align-items: center; 
             border-bottom: 1px solid var(--border); background: rgba(3,4,6,0.95); 
             position: sticky; top: 0; z-index: 900; backdrop-filter: blur(10px);
         }
@@ -94,7 +98,7 @@
     <video id="intro-vid" autoplay muted playsinline loop>
         <source src="intro.mp4" type="video/mp4">
     </video>
-    <button id="skip-btn" onclick="enterHub()">SKIP INTRO</button>
+    <button id="skip-btn" onclick="enterHub()">INITIALIZE SYSTEM</button>
 </div>
 
 <header>
@@ -118,7 +122,7 @@
 <div class="grid">
     <div class="card">
         <h3 style="font-family:'Syncopate'; font-size:0.6rem; margin-bottom:25px; color:var(--accent);">BROADCAST_SCHEDULE</h3>
-        <iframe src="https://www.twitch.tv/pxlsensei/schedule" style="height:400px; width:100%;"></iframe>
+        <iframe id="twitch-schedule" src="" style="height:400px; width:100%;"></iframe>
     </div>
     <div class="card">
         <h3 style="font-family:'Syncopate'; font-size:0.6rem; margin-bottom:25px;">UPLINKS</h3>
@@ -130,40 +134,38 @@
 </div>
 
 <script>
-    // 1. STABLE ENTER HUB FUNCTION
     function enterHub() {
         const loader = document.getElementById('loader');
-        loader.style.opacity = '0';
-        setTimeout(() => { 
-            loader.style.visibility = 'hidden'; 
-            loader.style.display = 'none';
-        }, 1500); // Smooth 1.5s fade
+        loader.classList.add('fade-out');
+        // Stop video playback to save resources
+        document.getElementById('intro-vid').pause();
     }
 
-    // 2. 10-SECOND AUTO-FADE TIMER
-    setTimeout(() => {
-        enterHub();
-    }, 10000); // 10,000ms = 10 Seconds
+    // Auto-fade after 10 seconds
+    setTimeout(enterHub, 10000);
 
     window.onload = () => {
-        const domain = window.location.hostname || "localhost";
+        // Fix for Twitch: Parent must be exactly the domain name
+        let domain = window.location.hostname;
+        if (!domain || domain === "127.0.0.1") { domain = "localhost"; }
         
-        // YOUR CHANNEL ID (Required for Auto-Live)
         const ytChannelID = "UCxiaxssXjLp0Dz8g34DycnA"; 
-        // YouTube Chat still requires a Video ID. Replace this with your current Live Video ID.
-        const currentLiveVideoID = "0AeedIUo_Y8"; 
+        const fallbackVideoID = "0AeedIUo_Y8"; 
 
-        // Twitch Integration
+        // Twitch Player & Chat
         document.getElementById('twitch-player').src = `https://player.twitch.tv/?channel=pxlsensei&parent=${domain}&autoplay=true&muted=true`;
         document.getElementById('twitch-chat').src = `https://www.twitch.tv/embed/pxlsensei/chat?parent=${domain}&darkpopout`;
+        document.getElementById('twitch-schedule').src = `https://www.twitch.tv/pxlsensei/schedule`;
         
-        // YouTube Auto-Live Integration
+        // YouTube Auto-Live Player
         document.getElementById('youtube-player').src = `https://www.youtube.com/embed/live_stream?channel=${ytChannelID}&autoplay=1&mute=1`;
-        document.getElementById('youtube-chat').src = `https://www.youtube.com/live_chat?v=${currentLiveVideoID}&embed_domain=${domain}`;
+        
+        // YouTube Chat: It defaults to your fallback ID. 
+        // NOTE: You must update currentLiveVideoID here manually when you go live 
+        // because YouTube blocks auto-fetching chat for security reasons.
+        document.getElementById('youtube-chat').src = `https://www.youtube.com/live_chat?v=${fallbackVideoID}&embed_domain=${domain}`;
     };
 </script>
 
 </body>
 </html>
-
-
