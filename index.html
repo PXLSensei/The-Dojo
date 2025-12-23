@@ -25,9 +25,14 @@
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .label-bar { background: #0a0c10; padding: 12px 30px; font-family: 'Syncopate'; font-size: 0.65rem; letter-spacing: 3px; border-bottom: 1px solid var(--border); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .stream-row { display: grid; grid-template-columns: 1fr 380px; height: 520px; background: #000; margin-bottom: 6px; }
-        .stream-container { position: relative; background: #111; }
-        iframe { width: 100%; height: 100%; border: none; background: #000; }
-        .fallback-msg { position: absolute; inset: 0; background: #111; color: #777; display: flex; align-items: center; justify-content: center; font-family: 'Inter'; font-size: 1.1rem; text-align: center; padding: 20px; }
+        .stream-container { position: relative; background: #111; overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; background: #000; display: block; }
+        .fallback-msg {
+            position: absolute; inset: 0; background: #111; color: #777; display: flex; align-items: center; justify-content: center;
+            font-family: 'Inter'; font-size: 1.1rem; text-align: center; padding: 20px; pointer-events: none;
+        }
+        .stream-container iframe.loaded { display: block; }
+        .stream-container .fallback-msg.hidden { display: none; }
         .unmute-btn { position: absolute; bottom: 15px; left: 15px; z-index: 10; padding: 10px 18px; background: rgba(0,0,0,0.7); border: 1px solid var(--neon); color: var(--neon); font-family: 'Syncopate'; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         .footer-links { padding: 50px 20px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
         .btn { padding: 18px 40px; border: 1px solid var(--border); color: #fff; text-decoration: none; font-family: 'Syncopate'; font-size: 0.75rem; transition: 0.4s; background: transparent; }
@@ -76,14 +81,16 @@
 </div>
 <section class="stream-row">
     <div class="stream-container">
-        <iframe id="twitch-p" allowfullscreen allow="autoplay"></iframe>
-        <button class="unmute-btn" onclick="document.getElementById('twitch-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
+        <iframe id="twitch-p" allowfullscreen allow="autoplay *" loading="lazy"></iframe>
         <div class="fallback-msg">Twitch Offline – Check back later!</div>
+        <button class="unmute-btn" onclick="document.getElementById('twitch-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
     </div>
     <div class="stream-container">
-        <iframe id="twitch-c" allow="autoplay"></iframe>
+        <iframe id="twitch-c" allow="autoplay" loading="lazy"></iframe>
     </div>
 </section>
+
+<!-- YouTube and Kick sections remain the same -->
 
 <div class="label-bar">
     <span style="color:var(--youtube)">YOUTUBE BROADCAST</span>
@@ -91,13 +98,13 @@
 </div>
 <section class="stream-row">
     <div class="stream-container">
-        <iframe id="youtube-p" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
-        <button class="unmute-btn" onclick="document.getElementById('youtube-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
+        <iframe id="youtube-p" allow="autoplay; encrypted-media; fullscreen" allowfullscreen loading="lazy"></iframe>
         <div class="fallback-msg">YouTube Offline – Check back later!</div>
+        <button class="unmute-btn" onclick="document.getElementById('youtube-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
     </div>
     <div class="stream-container">
-        <div id="youtube-chat-placeholder" class="fallback-msg" style="display:flex;">Live chat available during streams</div>
-        <iframe id="youtube-c" style="display:none;" allow="autoplay; encrypted-media"></iframe>
+        <div id="youtube-chat-placeholder" class="fallback-msg">Live chat available during streams</div>
+        <iframe id="youtube-c" style="display:none;" allow="autoplay; encrypted-media" loading="lazy"></iframe>
     </div>
 </section>
 
@@ -107,13 +114,13 @@
 </div>
 <section class="stream-row">
     <div class="stream-container">
-        <iframe id="kick-p" allowfullscreen allow="autoplay"></iframe>
-        <button class="unmute-btn" onclick="document.getElementById('kick-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
+        <iframe id="kick-p" allowfullscreen allow="autoplay" loading="lazy"></iframe>
         <div class="fallback-msg">Kick Offline – Check back later!</div>
+        <button class="unmute-btn" onclick="document.getElementById('kick-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
     </div>
     <div class="stream-container">
-        <div id="kick-chat-placeholder" class="fallback-msg" style="display:flex;">Kick chat available during live streams</div>
-        <iframe id="kick-c" style="display:none;"></iframe>
+        <div id="kick-chat-placeholder" class="fallback-msg">Kick chat available during live streams</div>
+        <iframe id="kick-c" style="display:none;" loading="lazy"></iframe>
     </div>
 </section>
 
@@ -138,11 +145,9 @@
 
     window.onload = () => {
         const host = window.location.hostname || "localhost";
+        const tParent = `&parent=${host}&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=pxlsensei.com&parent=www.pxlsensei.com&parent=127.0.0.1&parent=localhost&parent=www.twitch.tv`;
 
-        // MAXIMUM PARENT VARIATIONS for Twitch on GitHub Pages (this fixes most blank embed cases)
-        const tParent = `&parent=${host}&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=pxlsensei.com&parent=www.pxlsensei.com&parent=127.0.0.1&parent=localhost&parent=www.twitch.tv`;
-
-        // Twitch embeds
+        // Twitch
         document.getElementById('twitch-p').src = `https://player.twitch.tv/?channel=pxlsensei&autoplay=true&muted=true${tParent}`;
         document.getElementById('twitch-c').src = `https://www.twitch.tv/embed/pxlsensei/chat?darkpopout${tParent}`;
 
@@ -152,6 +157,16 @@
 
         // Kick
         document.getElementById('kick-p').src = `https://player.kick.com/pxlsensei?autoplay=true&muted=true`;
+
+        // Optional: Auto-hide fallback if iframe loads (works in most browsers)
+        setTimeout(() => {
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                if (iframe.src && iframe.contentDocument) {
+                    iframe.closest('.stream-container').querySelector('.fallback-msg').classList.add('hidden');
+                }
+            });
+        }, 8000); // give embeds time to load
     };
 </script>
 </body>
