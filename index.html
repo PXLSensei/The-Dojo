@@ -14,51 +14,43 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        html, body { 
-            width: 100%; min-height: 100vh; background: var(--bg); color: var(--txt); 
-            font-family: 'Inter', sans-serif; letter-spacing: -0.01em;
-        }
+        html, body { width: 100%; min-height: 100vh; background: var(--bg); color: var(--txt); font-family: 'Inter', sans-serif; }
 
-        /* --- BACKGROUND IMAGE CONFIG --- */
+        /* --- BACKGROUND --- */
         body {
             background-image: linear-gradient(rgba(3, 4, 6, 0.7), rgba(3, 4, 6, 0.7)), url('background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+            background-size: cover; background-position: center; background-attachment: fixed;
         }
 
-        /* --- LOGO Y-AXIS SPIN --- */
+        /* --- LOGO SPIN --- */
         @keyframes spinY { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
         .spinning-logo { width: 150px; height: 150px; animation: spinY 8s linear infinite; filter: drop-shadow(0 0 5px var(--accent)); }
 
         /* --- LOADER --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity 1s ease, visibility 1s; }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity 1s ease; }
         #loader video { position: absolute; min-width: 100%; min-height: 100%; object-fit: cover; opacity: 0.6; }
-        #skip-btn { position: absolute; bottom: 50px; z-index: 10002; padding: 10px 40px; border: 1px solid rgba(255,255,255,0.2); color: #fff; background: rgba(0,0,0,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 5px; font-family: 'Syncopate', sans-serif; font-size: 0.6rem; backdrop-filter: blur(5px); cursor: pointer; }
+        #skip-btn { position: absolute; bottom: 50px; z-index: 10002; padding: 10px 40px; border: 1px solid rgba(255,255,255,0.2); color: #fff; background: rgba(0,0,0,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 5px; font-family: 'Syncopate'; font-size: 0.6rem; cursor: pointer; }
 
         /* --- HEADER --- */
         header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(3, 4, 6, 0.8); position: sticky; top: 0; z-index: 900; backdrop-filter: blur(15px); }
         .brand-wrap { display: flex; align-items: center; gap: 20px; }
-        .logo-text { font-family: 'Syncopate', sans-serif; font-size: 1.2rem; font-weight: 700; color: #fff; text-transform: uppercase; text-decoration: none; letter-spacing: 10px; }
+        .logo-text { font-family: 'Syncopate'; font-size: 1.2rem; font-weight: 700; color: #fff; text-transform: uppercase; text-decoration: none; letter-spacing: 10px; }
         .logo-text span { color: var(--accent); }
 
-        /* --- TRIPLE-PANEL THEATER --- */
-        .theater-container { display: grid; grid-template-columns: 1fr 600px; height: 65vh; background: rgba(0,0,0,0.6); gap: 1px; border-bottom: 1px solid var(--border); backdrop-filter: blur(5px); }
+        /* --- THEATER --- */
+        .theater-container { display: grid; grid-template-columns: 1fr 600px; height: 65vh; background: rgba(0,0,0,0.6); gap: 1px; border-bottom: 1px solid var(--border); }
         .screens-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
         .stream-box iframe { width: 100%; height: 100%; border: none; }
         .chat-area { display: grid; grid-template-columns: 1fr 1fr; background: rgba(5, 5, 5, 0.6); }
         .chat-pane { border-left: 1px solid var(--border); position: relative; }
-        .chat-label { position: absolute; top: 0; left: 0; background: var(--accent); color: #fff; font-size: 9px; padding: 2px 8px; font-family: 'Syncopate'; z-index: 10; letter-spacing: 1px; }
+        .chat-label { position: absolute; top: 0; left: 0; background: var(--accent); color: #fff; font-size: 9px; padding: 2px 8px; font-family: 'Syncopate'; z-index: 10; }
 
-        /* --- GRID CONTENT --- */
-        .grid-container { max-width: 1400px; margin: 60px auto; display: grid; grid-template-columns: 1.8fr 1fr; gap: 40px; padding: 0 40px; padding-bottom: 100px; }
+        /* --- GRID --- */
+        .grid-container { max-width: 1400px; margin: 60px auto; display: grid; grid-template-columns: 1.8fr 1fr; gap: 40px; padding: 0 40px 100px; }
         .card { background: var(--panel); border: 1px solid var(--border); padding: 40px; border-radius: 4px; backdrop-filter: blur(10px); }
-        .section-title { font-family: 'Syncopate', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 5px; color: #fff; margin-bottom: 35px; text-transform: uppercase; display: flex; align-items: center; gap: 15px; }
+        .section-title { font-family: 'Syncopate'; font-size: 0.65rem; font-weight: 700; letter-spacing: 5px; color: #fff; margin-bottom: 35px; text-transform: uppercase; display: flex; align-items: center; gap: 15px; }
         .section-title::after { content: ""; height: 1px; flex-grow: 1; background: var(--border); }
 
-        /* --- BUTTONS --- */
         .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .soc-btn { border: 1px solid var(--border); padding: 18px; text-decoration: none; color: #fff; font-size: 0.7rem; font-weight: 700; display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); transition: 0.3s; }
         .soc-btn:hover { border-color: var(--neon); background: rgba(0, 242, 255, 0.1); }
@@ -67,7 +59,7 @@
             .theater-container { grid-template-columns: 1fr; height: auto; }
             .screens-wrap { grid-template-columns: 1fr; }
             .chat-area { display: none; }
-            .grid-container { grid-template-columns: 1fr; padding: 0 20px; }
+            .grid-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -93,19 +85,17 @@
     <div class="screens-wrap">
         <div class="stream-box"><iframe id="twitch-player" src="" allowfullscreen></iframe></div>
         <div class="stream-box">
-            <iframe id="youtube-player" 
-                    src="https://www.youtube.com/embed/fDlkYYQ4rUc?autoplay=1&mute=1&loop=1&playlist=fDlkYYQ4rUc" 
-                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <iframe id="youtube-player" src="https://www.youtube.com/embed/fDlkYYQ4rUc?autoplay=1&mute=1&loop=1&playlist=fDlkYYQ4rUc" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
     </div>
     <div class="chat-area">
         <div class="chat-pane">
             <div class="chat-label">TWITCH</div>
-            <iframe src="https://www.twitch.tv/embed/pxlsensei/chat?parent=localhost&darkpopout" width="100%" height="100%"></iframe>
+            <iframe id="twitch-chat" src="" width="100%" height="100%"></iframe>
         </div>
         <div class="chat-pane">
             <div class="chat-label">YOUTUBE</div>
-            <iframe src="https://www.youtube.com/live_chat?v=fDlkYYQ4rUc&embed_domain=localhost" width="100%" height="100%"></iframe>
+            <iframe id="youtube-chat" src="" width="100%" height="100%"></iframe>
         </div>
     </div>
 </section>
@@ -127,14 +117,8 @@
                 <a href="https://twitch.tv/pxlsensei" target="_blank" class="soc-btn">TWITCH <span>01</span></a>
                 <a href="https://youtube.com/@PXLSensei" target="_blank" class="soc-btn">YOUTUBE <span>02</span></a>
                 <a href="https://kick.com/pxlsensei" target="_blank" class="soc-btn">KICK <span>03</span></a>
-                <a href="https://x.com/pxlsensei" target="_blank" class="soc-btn">TIKTOK.COM <span>04</span></a>
+                <a href="https://x.com/pxlsensei" target="_blank" class="soc-btn">X.COM <span>04</span></a>
             </div>
-        </div>
-
-        <div class="card" style="margin-top: 40px;">
-            <h3 class="section-title">Support</h3>
-            <p style="font-size: 0.75rem; color: #848d97; margin-bottom: 25px;">Data stream maintenance and asset acquisition support.</p>
-            <a href="#" class="soc-btn" style="border-color: var(--neon); color: var(--neon); justify-content: center;">INITIATE DONATION</a>
         </div>
     </div>
 </div>
@@ -146,9 +130,8 @@
     }
 
     async function checkStatus() {
-        const username = 'pxlsensei';
         try {
-            const res = await fetch(`https://decapi.me/twitch/uptime/${username}`);
+            const res = await fetch(`https://decapi.me/twitch/uptime/pxlsensei`);
             const data = await res.text();
             if (!data.includes("offline")) {
                 document.getElementById('status-btn').style.borderColor = "#ff4655";
@@ -160,12 +143,16 @@
 
     window.onload = () => {
         const host = window.location.hostname || "localhost";
+        const videoID = "fDlkYYQ4rUc"; // Replace this when you have a new YouTube live ID
+        
+        // Dynamic Player & Chat URLs
         document.getElementById('twitch-player').src = `https://player.twitch.tv/?channel=pxlsensei&parent=${host}&autoplay=true&muted=true`;
+        document.getElementById('twitch-chat').src = `https://www.twitch.tv/embed/pxlsensei/chat?parent=${host}&darkpopout`;
+        document.getElementById('youtube-chat').src = `https://www.youtube.com/live_chat?v=${videoID}&embed_domain=${host}`;
+        
         checkStatus();
     };
 </script>
 
 </body>
 </html>
-
-
