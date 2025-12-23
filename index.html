@@ -3,143 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PXL SENSEI | Digital Architecture</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
-    
+    <title>PXL SENSEI | Live Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #030406; --panel: rgba(10, 12, 16, 0.85); --txt: #ffffff;
-            --accent: #7c3aed; --neon: #00f2ff; --border: rgba(22, 27, 34, 0.8);
-        }
-
+        :root { --bg: #030406; --accent: #7c3aed; --neon: #00f2ff; --border: #1a1d23; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { width: 100%; min-height: 100vh; background: var(--bg); color: var(--txt); font-family: 'Inter', sans-serif; overflow-x: hidden; }
-
-        /* --- BACKGROUND --- */
-        body {
-            background-image: linear-gradient(rgba(3, 4, 6, 0.8), rgba(3, 4, 6, 0.8)), url('background.jpg');
-            background-size: cover; background-position: center; background-attachment: fixed;
+        body { 
+            background: linear-gradient(rgba(3,4,6,0.85), rgba(3,4,6,0.85)), url('background.jpg') center/cover fixed;
+            color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh;
         }
 
-        /* --- LOGO Y-AXIS SPIN --- */
-        @keyframes spinY { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
-        .spinning-logo { width: 150px; height: 150px; animation: spinY 8s linear infinite; filter: drop-shadow(0 0 5px var(--accent)); }
+        /* --- LOADER/INTRO --- */
+        #loader { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 10000; transition: opacity 0.8s ease; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        #intro-vid { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+        #skip-btn { 
+            position: relative; z-index: 10001; padding: 12px 35px; 
+            border: 1px solid rgba(255,255,255,0.3); color: #fff; background: rgba(0,0,0,0.6); 
+            font-family: 'Syncopate'; font-size: 0.65rem; letter-spacing: 5px; cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
 
-        /* --- LOADER --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity 1s ease; }
-        #skip-btn { position: absolute; bottom: 50px; z-index: 10002; padding: 10px 40px; border: 1px solid rgba(255,255,255,0.2); color: #fff; background: rgba(0,0,0,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 5px; font-family: 'Syncopate'; font-size: 0.6rem; cursor: pointer; }
-
-        /* --- HEADER --- */
-        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(3, 4, 6, 0.85); position: sticky; top: 0; z-index: 900; backdrop-filter: blur(15px); }
-        .brand-wrap { display: flex; align-items: center; gap: 20px; }
-        .logo-text { font-family: 'Syncopate'; font-size: 1.2rem; font-weight: 700; color: #fff; text-transform: uppercase; text-decoration: none; letter-spacing: 10px; }
-        .logo-text span { color: var(--accent); }
+        /* --- SPINNING LOGO --- */
+        @keyframes spinY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        .logo-spin { width: 45px; height: 45px; animation: spinY 10s linear infinite; filter: drop-shadow(0 0 8px var(--accent)); }
 
         /* --- THEATER --- */
-        .theater-container { display: grid; grid-template-columns: 1fr 600px; height: 60vh; background: rgba(0,0,0,0.6); gap: 1px; border-bottom: 1px solid var(--border); }
-        .screens-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
-        .stream-box iframe { width: 100%; height: 100%; border: none; }
-        .chat-area { display: grid; grid-template-columns: 1fr 1fr; background: rgba(5, 5, 5, 0.6); }
-        .chat-pane { border-left: 1px solid var(--border); position: relative; }
-        .chat-label { position: absolute; top: 0; left: 0; background: var(--accent); color: #fff; font-size: 9px; padding: 2px 8px; font-family: 'Syncopate'; z-index: 10; }
+        .theater { display: grid; grid-template-columns: 1fr 450px; height: 60vh; background: #000; border-bottom: 1px solid var(--border); }
+        .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+        .chat-grid { display: grid; grid-template-rows: 1fr 1fr; background: var(--border); }
+        iframe { width: 100%; height: 100%; border: none; background: #000; }
+        .label { position: absolute; top: 0; left: 0; background: var(--accent); font-size: 8px; padding: 4px 10px; font-family: 'Syncopate'; z-index: 5; }
 
-        /* --- CONTENT --- */
-        .grid-container { max-width: 1400px; margin: 60px auto; display: grid; grid-template-columns: 1.8fr 1fr; gap: 40px; padding: 0 40px 100px; }
-        .card { background: var(--panel); border: 1px solid var(--border); padding: 40px; border-radius: 4px; backdrop-filter: blur(10px); }
-        .section-title { font-family: 'Syncopate'; font-size: 0.65rem; font-weight: 700; letter-spacing: 5px; color: #fff; margin-bottom: 35px; text-transform: uppercase; display: flex; align-items: center; gap: 15px; }
-        .section-title::after { content: ""; height: 1px; flex-grow: 1; background: var(--border); }
+        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(3,4,6,0.9); }
+        .brand { display: flex; align-items: center; gap: 15px; font-family: 'Syncopate'; letter-spacing: 6px; text-decoration: none; color: #fff; }
+        
+        .grid { max-width: 1300px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 350px; gap: 25px; }
+        .card { background: rgba(10,12,16,0.8); border: 1px solid var(--border); padding: 30px; border-radius: 2px; }
+        .btn { display: block; padding: 15px; border: 1px solid var(--border); color: #fff; text-decoration: none; font-size: 0.65rem; font-family: 'Syncopate'; margin-bottom: 10px; transition: 0.2s; text-align: center; }
+        .btn:hover { border-color: var(--neon); background: rgba(0,242,255,0.05); }
 
-        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .soc-btn { border: 1px solid var(--border); padding: 18px; text-decoration: none; color: #fff; font-size: 0.7rem; font-weight: 700; display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); transition: 0.3s; }
-        .soc-btn:hover { border-color: var(--neon); background: rgba(0, 242, 255, 0.1); }
-
-        @media (max-width: 1024px) {
-            .theater-container { grid-template-columns: 1fr; height: auto; }
-            .screens-wrap { grid-template-columns: 1fr; }
-            .chat-area { display: none; }
-        }
+        @media (max-width: 1000px) { .theater { grid-template-columns: 1fr; height: auto; } .chat-grid { display: none; } .video-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <div id="loader">
-    <button id="skip-btn" onclick="enterHub()">SKIP INTRO</button>
+    <video id="intro-vid" autoplay muted playsinline loop>
+        <source src="intro.mp4" type="video/mp4">
+    </video>
+    <button id="skip-btn" onclick="enterHub()">ENTER HUB</button>
 </div>
 
 <header>
-    <div class="brand-wrap">
-        <img src="logo.png" class="spinning-logo" alt="Logo">
-        <a href="#" class="logo-text">PXL <span>SENSEI</span></a>
-    </div>
-    <div id="status-btn" style="border: 1px solid var(--border); padding: 8px 15px; font-size: 0.6rem; font-family: 'Syncopate'; display: flex; align-items: center; gap: 8px;">
-        <span id="status-text">OFFLINE</span>
-    </div>
+    <a href="#" class="brand"><img src="logo.png" class="logo-spin">PXL SENSEI</a>
 </header>
 
-<section class="theater-container">
-    <div class="screens-wrap">
-        <div class="stream-box"><iframe id="twitch-player" src="" allowfullscreen></iframe></div>
-        <div class="stream-box">
-            <iframe id="youtube-player" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+<section class="theater">
+    <div class="video-grid">
+        <iframe id="twitch-player" allowfullscreen></iframe>
+        <iframe id="youtube-player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
-    <div class="chat-area">
-        <div class="chat-pane">
-            <div class="chat-label">TWITCH_CHAT</div>
-            <iframe id="twitch-chat" src="" width="100%" height="100%"></iframe>
-        </div>
-        <div class="chat-pane">
-            <div class="chat-label">YT_CHAT</div>
-            <iframe id="youtube-chat" src="" width="100%" height="100%"></iframe>
-        </div>
+    <div class="chat-grid">
+        <div style="position:relative;"><div class="label">TWITCH</div><iframe id="twitch-chat"></iframe></div>
+        <div style="position:relative;"><div class="label">YOUTUBE</div><iframe id="youtube-chat"></iframe></div>
     </div>
 </section>
 
-<div class="grid-container">
-    <div class="column">
-        <div class="card">
-            <h3 class="section-title">Schedule</h3>
-            <div style="height: 400px; background: rgba(0,0,0,0.5); overflow: hidden;">
-                <iframe src="https://www.twitch.tv/pxlsensei/schedule" width="100%" height="100%" frameborder="0"></iframe>
-            </div>
-        </div>
+<div class="grid">
+    <div class="card">
+        <h3 style="font-family:'Syncopate'; font-size:0.6rem; margin-bottom:20px; color:var(--accent);">BROADCAST_SCHEDULE</h3>
+        <iframe src="https://www.twitch.tv/pxlsensei/schedule" style="height:450px; width:100%;"></iframe>
     </div>
-
-    <div class="column">
-        <div class="card">
-            <h3 class="section-title">Links</h3>
-            <div class="social-grid">
-                <a href="https://twitch.tv/pxlsensei" target="_blank" class="soc-btn">TWITCH</a>
-                <a href="https://youtube.com/@PXLSensei" target="_blank" class="soc-btn">YOUTUBE</a>
-                <a href="https://kick.com/pxlsensei" target="_blank" class="soc-btn">KICK</a>
-                <a href="https://x.com/pxlsensei" target="_blank" class="soc-blank" class="soc-btn">X.COM</a>
-            </div>
-        </div>
+    <div class="card">
+        <h3 style="font-family:'Syncopate'; font-size:0.6rem; margin-bottom:20px;">UPLINKS</h3>
+        <a href="https://twitch.tv/pxlsensei" target="_blank" class="btn">TWITCH</a>
+        <a href="https://youtube.com/@PXLSensei" target="_blank" class="btn">YOUTUBE</a>
+        <a href="https://kick.com/pxlsensei" target="_blank" class="btn">KICK</a>
+        <a href="https://x.com/pxlsensei" target="_blank" class="btn">X.COM</a>
     </div>
 </div>
 
 <script>
     function enterHub() {
         document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => { document.getElementById('loader').style.visibility = 'hidden'; }, 1000);
+        setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 800);
     }
 
     window.onload = () => {
-        const host = window.location.hostname || "localhost";
+        const domain = window.location.hostname || "localhost";
+        const ytChannelID = "UC_un3YZXBtAlCyApGu4_eSP"; // YOUR CHANNEL ID
+        const activeVideoID = "fDlkYYQ4rUc"; // Needed for YouTube Chat to work
+
+        // Twitch
+        document.getElementById('twitch-player').src = `https://player.twitch.tv/?channel=pxlsensei&parent=${domain}&autoplay=true&muted=true`;
+        document.getElementById('twitch-chat').src = `https://www.twitch.tv/embed/pxlsensei/chat?parent=${domain}&darkpopout`;
         
-        // 1. SET YOUR YOUTUBE CHANNEL ID HERE (Required for Auto-Live)
-        const ytChannelID = "UC_un3YZXBtAlCyApGu4_eSP"; // Example ID, replace with yours!
-
-        // Twitch Config
-        document.getElementById('twitch-player').src = `https://player.twitch.tv/?channel=pxlsensei&parent=${host}&autoplay=true&muted=true`;
-        document.getElementById('twitch-chat').src = `https://www.twitch.tv/embed/pxlsensei/chat?parent=${host}&darkpopout`;
-
-        // YouTube Config (Auto-Live Video)
+        // YouTube (Forces autoplay + muted to ensure it bypasses browser blocks)
         document.getElementById('youtube-player').src = `https://www.youtube.com/embed/live_stream?channel=${ytChannelID}&autoplay=1&mute=1`;
-        
-        // Note: YouTube Chat still requires a Video ID to work perfectly. 
-        // For now, it defaults to a general embed domain.
-        document.getElementById('youtube-chat').src = `https://www.youtube.com/live_chat?v=fDlkYYQ4rUc&embed_domain=${host}`;
+        document.getElementById('youtube-chat').src = `https://www.youtube.com/live_chat?v=${activeVideoID}&embed_domain=${domain}`;
     };
 </script>
 
