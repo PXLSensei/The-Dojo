@@ -7,15 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #030406;
-            --accent: #7c3aed;
-            --neon: #00f2ff;
-            --border: rgba(255, 255, 255, 0.1);
-            --twitch: #9146FF;
-            --youtube: #FF0000;
-            --kick: #53FC18;
-            --tiktok: #FF0050;
-            --live: #ff0000;
+            --bg: #030406; --accent: #7c3aed; --neon: #00f2ff; --border: rgba(255, 255, 255, 0.1);
+            --twitch: #9146FF; --youtube: #FF0000; --kick: #53FC18; --tiktok: #FF0050; --live: #ff0000;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -83,12 +76,12 @@
 </div>
 <section class="stream-row">
     <div class="stream-container">
-        <iframe id="twitch-p" allowfullscreen></iframe>
+        <iframe id="twitch-p" allowfullscreen allow="autoplay"></iframe>
         <button class="unmute-btn" onclick="document.getElementById('twitch-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
         <div class="fallback-msg">Twitch Offline – Check back later!</div>
     </div>
     <div class="stream-container">
-        <iframe id="twitch-c"></iframe>
+        <iframe id="twitch-c" allow="autoplay"></iframe>
     </div>
 </section>
 
@@ -114,7 +107,7 @@
 </div>
 <section class="stream-row">
     <div class="stream-container">
-        <iframe id="kick-p" allowfullscreen></iframe>
+        <iframe id="kick-p" allowfullscreen allow="autoplay"></iframe>
         <button class="unmute-btn" onclick="document.getElementById('kick-p').contentWindow.postMessage('{\"type\":\"unmute\"}', '*')">UNMUTE</button>
         <div class="fallback-msg">Kick Offline – Check back later!</div>
     </div>
@@ -146,18 +139,18 @@
     window.onload = () => {
         const host = window.location.hostname || "localhost";
 
-        // SUPER-EXPANDED PARENT DOMAINS to fix Twitch embed on GitHub Pages (this is the most common fix)
-        const tParent = `&parent=${host}&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=pxlsensei.com&parent=www.pxlsensei.com&parent=www.twitch.tv&parent=localhost&parent=127.0.0.1`;
+        // MAXIMUM PARENT VARIATIONS for Twitch on GitHub Pages (this fixes most blank embed cases)
+        const tParent = `&parent=${host}&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=pxlsensei.com&parent=www.pxlsensei.com&parent=127.0.0.1&parent=localhost&parent=www.twitch.tv`;
 
-        // Twitch (should now load reliably)
+        // Twitch embeds
         document.getElementById('twitch-p').src = `https://player.twitch.tv/?channel=pxlsensei&autoplay=true&muted=true${tParent}`;
         document.getElementById('twitch-c').src = `https://www.twitch.tv/embed/pxlsensei/chat?darkpopout${tParent}`;
 
-        // YouTube - auto live stream
+        // YouTube live
         const channelID = "UCxiaxssXjLp0Dz8g34DycnA";
         document.getElementById('youtube-p').src = `https://www.youtube.com/embed/live_stream?channel=${channelID}&autoplay=1&mute=1`;
 
-        // Kick player
+        // Kick
         document.getElementById('kick-p').src = `https://player.kick.com/pxlsensei?autoplay=true&muted=true`;
     };
 </script>
