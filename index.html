@@ -40,7 +40,7 @@
             overflow-x: hidden;
         }
 
-        /* ── LOADER ── */
+        /* Loader */
         #loader {
             position: fixed;
             inset: 0;
@@ -92,7 +92,7 @@
             transform: translateY(-2px);
         }
 
-        /* ── HEADER ── */
+        /* Header */
         header {
             position: sticky;
             top: 0;
@@ -122,15 +122,8 @@
             animation: spin 12s linear infinite, glow 5s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            from { transform: rotateY(0deg); }
-            to   { transform: rotateY(360deg); }
-        }
-
-        @keyframes glow {
-            0%, 100% { filter: drop-shadow(0 0 8px var(--accent)) brightness(0.9); }
-            50%      { filter: drop-shadow(0 0 25px var(--neon)) brightness(1.2); }
-        }
+        @keyframes spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        @keyframes glow { 0%,100% { filter: drop-shadow(0 0 8px var(--accent)) brightness(0.9); } 50% { filter: drop-shadow(0 0 25px var(--neon)) brightness(1.2); } }
 
         .logo {
             font-family: 'Syncopate', sans-serif;
@@ -147,7 +140,7 @@
             text-shadow: 0 0 18px var(--neon);
         }
 
-        /* ── MAIN CONTENT ── */
+        /* Main content */
         main {
             max-width: 1100px;
             margin: 5rem auto 4rem;
@@ -160,13 +153,13 @@
             border-radius: 16px;
             padding: 4rem 2.5rem;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
         .card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 16px 50px rgba(139, 92, 246, 0.25);
+            box-shadow: 0 16px 50px rgba(139,92,246,0.25);
         }
 
         .title {
@@ -182,8 +175,51 @@
             color: var(--muted);
             font-size: 1.15rem;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 0 auto 2rem;
             line-height: 1.6;
+        }
+
+        /* Live indicator */
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(255,70,85,0.15);
+            color: var(--live);
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--live);
+            box-shadow: 0 0 20px rgba(255,70,85,0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Social icons */
+        .socials {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .social-icon {
+            width: 64px;
+            height: 64px;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            filter: brightness(0.9);
+        }
+
+        .social-icon:hover {
+            transform: scale(1.15) translateY(-4px);
+            filter: brightness(1.2) drop-shadow(0 0 12px currentColor);
         }
 
         /* Responsive */
@@ -193,16 +229,16 @@
             .logo-watermark { width: 70px; height: 70px; }
             .card { padding: 3rem 1.5rem; }
             .enter-btn { bottom: 2rem; right: 2rem; padding: 0.8rem 1.8rem; font-size: 0.9rem; }
+            .social-icon { width: 56px; height: 56px; }
         }
     </style>
 </head>
 <body>
 
 <div id="loader">
-    <!-- Upload your intro video to the repo and update this path -->
+    <!-- Upload your intro video and update path -->
     <video id="intro-vid" muted autoplay playsinline loop>
         <source src="./intro.mp4" type="video/mp4" />
-        <!-- Fallback image if video fails -->
         <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800" alt="Loading..." />
     </video>
 
@@ -211,7 +247,7 @@
 
 <header>
     <div class="logo-container">
-        <!-- Upload your logo and update this path -->
+        <!-- Upload your logo and update path -->
         <img src="./logo.png" class="logo-watermark" alt="PXL Sensei logo" />
         <a href="#" class="logo">PXL <span>SENSEI</span></a>
     </div>
@@ -219,11 +255,29 @@
 
 <main>
     <div class="card">
+        <div class="live-badge">● LIVE NOW</div>
+        
         <h1 class="title">Stream Ready</h1>
         <p class="subtitle">
             Lights hot. Chat waiting. Frags incoming.<br />
             Drop in, turn up — let's run it.
         </p>
+
+        <!-- Social Icons -->
+        <div class="socials">
+            <a href="https://www.twitch.tv/pxlsensei" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968819.png" alt="Twitch" class="social-icon" style="filter: hue-rotate(200deg);" />
+            </a>
+            <a href="https://www.youtube.com/@PXLSensei" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" class="social-icon" style="filter: hue-rotate(0deg) saturate(300%);" />
+            </a>
+            <a href="https://kick.com/pxlsensei" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968898.png" alt="Kick" class="social-icon" style="filter: hue-rotate(80deg) saturate(200%);" />
+            </a>
+            <a href="https://www.tiktok.com/@pxlsensei" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/5969/5969005.png" alt="TikTok" class="social-icon" style="filter: hue-rotate(320deg) saturate(250%);" />
+            </a>
+        </div>
     </div>
 </main>
 
@@ -237,16 +291,13 @@
         }, 1200);
     }
 
-    // Auto-enter after 12 seconds max (safety net)
     const autoEnter = setTimeout(enterStream, 12000);
 
-    // If video ends naturally → enter
     document.getElementById('intro-vid').onended = () => {
         clearTimeout(autoEnter);
         enterStream();
     };
 
-    // If video starts playing successfully, give it time
     document.getElementById('intro-vid').onplay = () => clearTimeout(autoEnter);
 </script>
 </body>
