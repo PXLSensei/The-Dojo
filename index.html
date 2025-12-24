@@ -3,7 +3,210 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PXL Sensei | Live <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PXL Sensei | Live Gaming Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Syncopate:wght@700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --panel: #161b22;
+            --txt: #ffffff;
+            --accent: #8b5cf6;
+            --neon: #00f2ff;
+            --live: #ff2e63;
+            --live-glow: #ff477e;
+            --live-bloom: #ff6b88;
+            --border: #30363d;
+            --muted: #848d97;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            min-height: 100dvh;
+            background-image: linear-gradient(rgba(11, 14, 20, 0.94), rgba(11, 14, 20, 0.90)),
+                              url('https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            overflow-x: hidden;
+        }
+        #loader { position: fixed; inset: 0; background: #000; z-index: 9999; display: grid; place-items: center; transition: opacity 1.2s ease; }
+        #loader.hidden { opacity: 0; pointer-events: none; }
+        #intro-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.75; }
+        .enter-btn { position: absolute; bottom: 3rem; right: 3rem; z-index: 10000; padding: 0.9rem 2.2rem; border: 2px solid var(--neon); background: rgba(0,0,0,0.65); color: var(--neon); font-family: 'Syncopate', sans-serif; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; transition: all 0.35s; box-shadow: 0 0 15px rgba(0,242,255,0.3); }
+        .enter-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 35px var(--neon); transform: translateY(-2px); }
+        header { position: sticky; top: 0; z-index: 100; padding: 1.2rem 5%; display: flex; justify-content: center; align-items: center; background: rgba(11,14,20,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+        .logo-container { position: relative; display: flex; align-items: center; gap: 1.2rem; }
+        .logo-watermark { position: absolute; width: 90px; height: 90px; opacity: 0.35; filter: drop-shadow(0 0 12px var(--accent)); animation: spin 12s linear infinite, glow 5s ease-in-out infinite; }
+        @keyframes spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        @keyframes glow { 0%,100% { filter: drop-shadow(0 0 8px var(--accent)) brightness(0.9); } 50% { filter: drop-shadow(0 0 25px var(--neon)) brightness(1.2); } }
+        .logo { font-family: 'Syncopate', sans-serif; font-size: 2.1rem; font-weight: 900; letter-spacing: 4px; color: var(--accent); text-shadow: 0 0 15px var(--accent); text-decoration: none; }
+        .logo span { color: var(--neon); text-shadow: 0 0 18px var(--neon); }
+        main { max-width: 1400px; margin: 5rem auto 4rem; padding: 0 1.5rem; }
+        .card {
+            background: linear-gradient(135deg, var(--panel) 0%, #1a2028 100%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4rem 2.5rem;
+            text-align: center;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(139,92,246,0.15);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(139,92,246,0.3), 0 0 0 2px rgba(139,92,246,0.25); }
+        .title { color: var(--neon); font-family: 'Syncopate', sans-serif; font-size: clamp(2.4rem, 7vw, 4rem); margin-bottom: 1.4rem; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 20px var(--neon); }
+        .subtitle { color: var(--muted); font-size: 1.2rem; max-width: 700px; margin: 0 auto 2.5rem; line-height: 1.7; }
+        /* Live indicator (vibrant + viewer count) */
+        .live-indicator {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-family: 'Syncopate', sans-serif;
+            font-weight: 900;
+            font-size: 1.45rem;
+            letter-spacing: 3px;
+            color: var(--live);
+            background: rgba(255, 46, 99, 0.15);
+            border: 2px solid var(--live);
+            box-shadow: 0 0 40px rgba(255, 46, 99, 0.6);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+        .live-indicator:hover { transform: scale(1.08); box-shadow: 0 0 80px rgba(255, 46, 99, 0.9), 0 0 120px rgba(255, 71, 126, 0.5); background: rgba(255, 46, 99, 0.28); }
+        .pulse-core { width: 22px; height: 22px; background: var(--live); border-radius: 50%; box-shadow: 0 0 25px var(--live), 0 0 50px var(--live-glow), 0 0 80px var(--live-bloom); animation: corePulse 1.1s ease-in-out infinite; z-index: 2; }
+        .pulse-ring { position: absolute; width: 40px; height: 40px; border: 4px solid var(--live-glow); border-radius: 50%; opacity: 0.7; animation: ringExpand 1.1s ease-out infinite; }
+        .pulse-glow { position: absolute; inset: -50px; background: radial-gradient(circle at center, rgba(255, 71, 126, 0.55) 0%, transparent 65%); border-radius: 50%; animation: glowBloom 2.2s ease-in-out infinite; pointer-events: none; }
+        @keyframes corePulse { 0%,100% { transform: scale(1); box-shadow: 0 0 25px var(--live), 0 0 50px var(--live-glow), 0 0 80px var(--live-bloom); } 50% { transform: scale(1.4); box-shadow: 0 0 45px var(--live), 0 0 90px var(--live-glow), 0 0 140px var(--live-bloom); } }
+        @keyframes ringExpand { 0% { transform: scale(0.4); opacity: 1; border-color: var(--live); } 70% { transform: scale(2.0); opacity: 0; border-color: var(--live-bloom); } 100% { transform: scale(3.0); opacity: 0; } }
+        @keyframes glowBloom { 0%,100% { opacity: 0.65; transform: scale(1); } 50% { opacity: 1; transform: scale(1.35); } }
+        .live-indicator.offline { color: var(--muted); background: rgba(132,141,151,0.08); border-color: var(--muted); box-shadow: none; }
+        .live-indicator.offline .pulse-core, .live-indicator.offline .pulse-ring, .live-indicator.offline .pulse-glow { display: none; }
+        .status-text { text-shadow: 0 0 12px currentColor; }
+        .viewer-count { font-size: 1.15rem; font-weight: 700; color: var(--live-bloom); text-shadow: 0 0 15px rgba(255,107,136,0.8); background: rgba(255,107,136,0.2); padding: 6px 16px; border-radius: 30px; border: 1px solid var(--live-bloom); margin-left: 16px; transition: all 0.4s ease; }
+        .live-indicator.offline .viewer-count { display: none; }
+        .live-indicator:hover .viewer-count { box-shadow: 0 0 25px rgba(255,107,136,0.8); transform: scale(1.08); }
+        /* Twitch section */
+        .twitch-section { display: grid; grid-template-columns: 3fr 1fr; gap: 1.5rem; margin: 3rem 0; }
+        .twitch-player-container, .twitch-chat-container { background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .twitch-player-container { position: relative; padding-bottom: 56.25%; height: 0; }
+        .twitch-player-container iframe, .twitch-chat-container iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+        .twitch-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 1.2rem; background: rgba(0,0,0,0.7); }
+        @media (max-width: 992px) { .twitch-section { grid-template-columns: 1fr; } .twitch-chat-container { height: 600px; } }
+        /* Socials */
+        .socials { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; margin-top: 2.5rem; }
+        .social-icon { width: 72px; height: 72px; object-fit: contain; transition: transform 0.3s ease, filter 0.3s ease; filter: brightness(1.1); }
+        .social-icon:hover { transform: scale(1.2) translateY(-5px); filter: brightness(1.3) drop-shadow(0 0 15px currentColor); }
+    </style>
+</head>
+<body>
+
+<div id="loader">
+    <video id="intro-vid" muted autoplay playsinline>
+        <source src="./intro.mp4" type="video/mp4" />
+        <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800" alt="Loading..." />
+    </video>
+    <button class="enter-btn" onclick="enterStream()">Enter Stream</button>
+</div>
+
+<header>
+    <div class="logo-container">
+        <img src="./logo.png" class="logo-watermark" alt="PXL Sensei logo" />
+        <a href="#" class="logo">PXL <span>SENSEI</span></a>
+    </div>
+</header>
+
+<main>
+    <div class="card">
+        <div id="liveIndicator" class="live-indicator offline" role="button" tabindex="0" onclick="window.open('https://www.twitch.tv/pxlsensei', '_blank')">
+            <span class="pulse-core"></span>
+            <span class="pulse-ring"></span>
+            <span class="pulse-glow"></span>
+            <span class="status-text">LIVE NOW</span>
+            <span id="viewerCount" class="viewer-count">0 viewers</span>
+        </div>
+
+        <h1 class="title">Stream Ready</h1>
+        <p class="subtitle">
+            Lights hot. Chat waiting. Frags incoming.<br />
+            Drop in, turn up — let's run it.
+        </p>
+
+        <div class="twitch-section">
+            <div class="twitch-player-container">
+                <iframe src="https://player.twitch.tv/?channel=pxlsensei&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=localhost&autoplay=true&muted=true" allowfullscreen></iframe>
+                <div class="twitch-fallback">Loading Twitch stream... (check twitch.tv/pxlsensei if blank)</div>
+            </div>
+            <div class="twitch-chat-container">
+                <iframe src="https://www.twitch.tv/embed/pxlsensei/chat?darkpopout&parent=pxlsensei.github.io&parent=www.pxlsensei.github.io&parent=localhost" scrolling="yes"></iframe>
+            </div>
+        </div>
+
+        <div class="socials">
+            <a href="https://www.twitch.tv/pxlsensei" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968819.png" alt="Twitch" class="social-icon" style="filter: hue-rotate(260deg) saturate(200%) brightness(1.1);" /></a>
+            <a href="https://www.youtube.com/@PXLSensei" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" class="social-icon" style="filter: hue-rotate(0deg) saturate(400%) brightness(1.15);" /></a>
+            <a href="https://kick.com/pxlsensei" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968898.png" alt="Kick" class="social-icon" style="filter: hue-rotate(80deg) saturate(250%) brightness(1.2);" /></a>
+            <a href="https://www.tiktok.com/@pxlsensei" target="_blank"><img src="https://i.pinimg.com/originals/4e/7e/2b/4e7e2b4e6e5f6e5f6e5f6e5f6e5f6e5f.png" alt="TikTok" class="social-icon" style="filter: hue-rotate(320deg) saturate(180%) brightness(1.25);" /></a>
+        </div>
+    </div>
+</main>
+
+<script>
+    const loader = document.getElementById('loader');
+    const video = document.getElementById('intro-vid');
+    const liveIndicator = document.getElementById('liveIndicator');
+    const viewerCountEl = document.getElementById('viewerCount');
+
+    function enterStream() {
+        loader.classList.add('hidden');
+        setTimeout(() => loader.style.display = 'none', 1200);
+    }
+
+    video.onended = enterStream;
+    const autoEnter = setTimeout(enterStream, 30000);
+    video.onplay = () => clearTimeout(autoEnter);
+
+    async function updateLiveStatus() {
+        // Replace with your secure proxy URL once deployed
+        const proxyUrl = 'https://your-vercel-proxy-url.vercel.app/api/live-status'; // ← UPDATE THIS LATER
+
+        try {
+            const res = await fetch(proxyUrl);
+            if (!res.ok) throw new Error('Proxy failed');
+
+            const data = await res.json();
+
+            if (data.isLive) {
+                viewerCountEl.textContent = data.formattedViewers + ' viewers';
+                liveIndicator.classList.remove('offline');
+                liveIndicator.classList.add('live');
+            } else {
+                liveIndicator.classList.remove('live');
+                liveIndicator.classList.add('offline');
+            }
+        } catch (err) {
+            console.error('Live status failed:', err);
+            liveIndicator.classList.remove('live');
+            liveIndicator.classList.add('offline');
+        }
+    }
+
+    // Check immediately + every 2 minutes
+    updateLiveStatus();
+    setInterval(updateLiveStatus, 120000);
+</script>
+</body>
+</html>Gaming Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Syncopate:wght@700&display=swap" rel="stylesheet" />
@@ -303,3 +506,4 @@
 </script>
 </body>
 </html>
+
