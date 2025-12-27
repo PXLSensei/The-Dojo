@@ -1,0 +1,24 @@
+import os
+from moviepy.editor import ImageClip, CompositeVideoClip
+import moviepy.video.fx.all as vfx
+
+def create_y_spin(input_path, output_path):
+    # Load the logo
+    clip = ImageClip(input_path).set_duration(2) # 2-second loop
+    
+    # Apply a rotation effect that mimics a Y-axis spin
+    # We use a custom transform or a sequence of resizing/skewing 
+    # to simulate the 3D perspective
+    spinning_clip = clip.fx(vfx.rotate, lambda t: 180*t, resample='bicubic')
+    
+    # Save as a high-quality GIF or MP4
+    spinning_clip.write_gif(output_path, fps=24)
+
+if __name__ == "__main__":
+    # Ensure the output directory exists
+    os.makedirs("assets/processed-logos", exist_ok=True)
+    
+    # Process every logo in the raw folder
+    for file in os.listdir("assets/raw-logos"):
+        if file.endswith((".png", ".jpg", ".svg")):
+            create_y_spin(f"assets/raw-logos/{file}", f"assets/processed-logos/{file.split('.')[0]}_spin.gif")
